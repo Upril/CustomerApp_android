@@ -19,30 +19,23 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.networking.SSLRules;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 public class LoginActivity extends AppCompatActivity {
-    EditText EmailText;
-    EditText PasswordText;
-    Button LoginButton;
-    Button GotoRegisterButton;
-    Boolean emailValid = false,passwordValid = false;
-    String URLline = "https://10.0.2.2:7277/api/account/login/";
+    private SSLRules ssl = new SSLRules();
+    private EditText EmailText;
+    private EditText PasswordText;
+    private Button LoginButton;
+    private Button GotoRegisterButton;
+    private Boolean emailValid = false,passwordValid = false;
+    private String URLline = "https://10.0.2.2:7277/api/account/login/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,39 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile(regexPattern);
 
         //ssl disable
-        try {
-            TrustManager[] victimizedManager = new TrustManager[]{
-
-                    new X509TrustManager() {
-
-                        public X509Certificate[] getAcceptedIssuers() {
-
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-
-                            return myTrustedAnchors;
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, victimizedManager, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ssl.SSlDisable();
 
         EmailText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -127,8 +88,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if(emailValid && passwordValid) {
-                    //api login tutaj
-
                     try {
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                         String url = URLline;
@@ -141,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLline, new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-
+                                Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -162,14 +121,6 @@ public class LoginActivity extends AppCompatActivity {
                                     return null;
                                 }
                             }
-//                            @Override
-//                            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-//                                String responseString = "";
-//                                if (response != null) {
-//                                    responseString = String.valueOf(response.statusCode);
-//                                }
-//                                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-//                            }
                         };
 
                         queue.add(stringRequest);

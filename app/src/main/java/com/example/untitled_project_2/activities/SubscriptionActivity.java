@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.SubscriptionAdapter;
+import com.example.untitled_project_2.networking.SSLRules;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +35,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class SubscriptionActivity extends AppCompatActivity {
+
+    private SSLRules ssl = new SSLRules();
     private String userId;
     private ArrayList<String> cities;
     private ArrayList<String> vaccines;
@@ -57,42 +60,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         userId = intent.getStringExtra("userId");
 
         //ssl disable
-        try {
-            TrustManager[] victimizedManager = new TrustManager[]{
-
-                    new X509TrustManager() {
-
-                        public X509Certificate[] getAcceptedIssuers() {
-
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-
-                            return myTrustedAnchors;
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, victimizedManager, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
+        ssl.SSlDisable();
 
         //request user subs
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());

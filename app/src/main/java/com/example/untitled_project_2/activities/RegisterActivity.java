@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.RegisterAdapter;
+import com.example.untitled_project_2.networking.SSLRules;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,11 +37,12 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RegisterActivity extends AppCompatActivity {
-    RecyclerView rvRegister;
-    Button registerButton;
-    String URLline = "https://10.0.2.2:7277/api/account/register/";
-    ArrayList<String> fieldsArray;
-    ArrayList<String> valuesArray;
+    private SSLRules ssl = new SSLRules();
+    private RecyclerView rvRegister;
+    private Button registerButton;
+    private String URLline = "https://10.0.2.2:7277/api/account/register/";
+    private ArrayList<String> fieldsArray;
+    private ArrayList<String> valuesArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,39 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         //ssl disable
-        try {
-            TrustManager[] victimizedManager = new TrustManager[]{
-
-                    new X509TrustManager() {
-
-                        public X509Certificate[] getAcceptedIssuers() {
-
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-
-                            return myTrustedAnchors;
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, victimizedManager, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ssl.SSlDisable();
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override

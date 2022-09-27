@@ -17,6 +17,7 @@ import android.widget.Toolbar;
 
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.VaccinesAdapter;
+import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
 import java.security.SecureRandom;
@@ -31,10 +32,11 @@ import javax.net.ssl.X509TrustManager;
 
 public class Vaccines extends AppCompatActivity {
 
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    Toolbar toolbar;
-    ActionBarDrawerToggle actionBarDrawerToggle;
+    private SSLRules ssl = new SSLRules();
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private RecyclerView rvVaccines;
     private static Bundle mBundleRecyclerViewState;
@@ -57,56 +59,7 @@ public class Vaccines extends AppCompatActivity {
         //wez stuff z intentu getStringExtra("tag")
 
         //ssl disable
-        try {
-            TrustManager[] victimizedManager = new TrustManager[]{
-
-                    new X509TrustManager() {
-
-                        public X509Certificate[] getAcceptedIssuers() {
-
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-
-                            return myTrustedAnchors;
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, victimizedManager, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //request vaccines
-//        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-//        String url = "https://10.0.2.2:7277/api/vaccine/all/";
-//        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url,null,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//                Log.i("Error",error.toString());
-//            }
-//        });
-//        queue.add(arrayRequest);
+        ssl.SSlDisable();
 
         rvVaccines = (RecyclerView) findViewById(R.id.vaccinesListRv);
         //check czy z długimi listami sie nie pierdoli
