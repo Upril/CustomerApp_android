@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menuAccount"
+            android:icon="@drawable/ic_account"
+            android:title="Account" />
+        <item
+            android:id="@+id/menuSubscriptions"
+            android:icon="@drawable/ic_vaccines"
+            android:title="Subscriptions" />
+        <item
+            android:id="@+id/menuMyVaccines"
+            android:icon="@drawable/ic_myvaccines"
+            android:title="MyVaccines" />
+    </group>
+    <group android:checkableBehavior="single">
+        <item android:title="Functions">
+            <menu>
+                <group>
+                    <item
+                        android:id="@+id/menuSettings"
+                        android:icon="@drawable/ic_baseline_settings_24"
+                        android:title="Settings" />
+                    <item
+                        android:id="@+id/menuLogout"
+                        android:icon="@drawable/ic_logout"
+                        android:title="Logout" />
+                </group>
+            </menu>
+        </item>
+    </group>
+
+</menu>
