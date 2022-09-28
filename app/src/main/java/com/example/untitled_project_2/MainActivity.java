@@ -19,12 +19,13 @@ import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.activities.LoginActivity;
 import com.example.untitled_project_2.activities.SettingsActivity;
 import com.example.untitled_project_2.activities.SubscriptionActivity;
+import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
-    Toolbar toolbar;
+    MenuActivityLauncher menuActivityLauncher;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Boolean loggedIn = false;
     String token;
@@ -36,33 +37,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //init menu
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.menu_open,R.string.menu_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        menuActivityLauncher = new MenuActivityLauncher(MainActivity.this);
+        menuActivityLauncher.init(navigationView, drawerLayout,MainActivity.this, mActivityLauncher);
 
         //if i need to resppond to results
-        mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->  {
-           if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-               Bundle bundle = result.getData().getExtras();
-               //zmien na string w values
-               String resultString = bundle.getString("ActivityResult");
-               switch (resultString) {
-                   case "loginOK":
+        mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                Bundle bundle = result.getData().getExtras();
+                //zmien na string w values
+                String resultString = bundle.getString("ActivityResult");
+                switch (resultString) {
+                    case "loginOK":
                         token = bundle.getString("token");
                         loggedIn = true;
 
                         //Toast.makeText(this, "Odebrano wiadomość, Witaj "+userName,Toast.LENGTH_SHORT).show();
                         break;
-               }
-           }
-           if (result.getResultCode() == RESULT_CANCELED) {
-               Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
-           }
-           //do something with data
+                }
+            }
+            if (result.getResultCode() == RESULT_CANCELED) {
+                Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
+            }
+            //do something with data
         });
         //redirect to login page
 
@@ -70,55 +73,9 @@ public class MainActivity extends AppCompatActivity {
 //            startLogin();
 //        }
 
-
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()){
-                    case R.id.menuAccount:
-                        Log.i("Account clicked","Account was clicked");
-                        //mActivityLauncher.launch();
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuSubscriptions:
-                        Log.i("Vaccines clicked","Vaccines was clicked");
-                        startSubs();
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuMyVaccines:
-                        Log.i("MyVaccines clicked","MyVaccines was clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuSettings:
-                        Log.i("Settings clicked","Settings was clicked");
-                        startSettings();
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuLogout:
-                        Log.i("Logout clicked","Logout was clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                }
-
-                return false;
-            }
-        });
     }
 
-    public void startLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        mActivityLauncher.launch(intent);
-    }
-    public void startSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        mActivityLauncher.launch(intent);
-    }
-    public void startSubs() {
-        Intent intent = new Intent(this, SubscriptionActivity.class);
-        mActivityLauncher.launch(intent);
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

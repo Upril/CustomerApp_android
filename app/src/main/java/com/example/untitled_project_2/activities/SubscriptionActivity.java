@@ -1,12 +1,18 @@
 package com.example.untitled_project_2.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -16,8 +22,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.adapters.SubscriptionAdapter;
 import com.example.untitled_project_2.networking.SSLRules;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +50,11 @@ public class SubscriptionActivity extends AppCompatActivity {
     private ArrayList<String> vaccines;
     private ArrayList<String> subIds;
     private RecyclerView rvSubs;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private MenuActivityLauncher menuActivityLauncher;
+    public static ActivityResultLauncher<Intent> mActivityLauncher;
     private int length;
 
     @Override
@@ -50,6 +63,16 @@ public class SubscriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_subscription);
 
         TextView test = (TextView)findViewById(R.id.testView);
+
+        //init menu
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        menuActivityLauncher = new MenuActivityLauncher(SubscriptionActivity.this);
+        menuActivityLauncher.init(navigationView,drawerLayout,SubscriptionActivity.this,mActivityLauncher);
 
         subIds = new ArrayList<String>();
         vaccines = new ArrayList<String>();
@@ -111,5 +134,12 @@ public class SubscriptionActivity extends AppCompatActivity {
 
 
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
