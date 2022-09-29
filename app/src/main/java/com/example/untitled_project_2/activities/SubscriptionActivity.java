@@ -65,6 +65,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         TextView test = (TextView)findViewById(R.id.testView);
 
         //init menu
+        setTitle("Twoje Subskrypcje");
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
