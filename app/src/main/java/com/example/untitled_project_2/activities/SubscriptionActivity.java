@@ -3,8 +3,8 @@ package com.example.untitled_project_2.activities;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,21 +32,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class SubscriptionActivity extends AppCompatActivity {
 
     private SSLRules ssl = new SSLRules();
     private String userId;
+    private Button addSubButton;
     private ArrayList<String> cities;
     private ArrayList<String> vaccines;
     private ArrayList<String> subIds;
@@ -61,8 +54,6 @@ public class SubscriptionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription);
-
-        TextView test = (TextView)findViewById(R.id.testView);
 
         //init menu
         setTitle("Twoje Subskrypcje");
@@ -120,7 +111,6 @@ public class SubscriptionActivity extends AppCompatActivity {
                             rvSubs.setAdapter(subAdapter);
                             rvSubs.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                            test.setText(cities.toString());
 
                         }
                     }
@@ -132,6 +122,14 @@ public class SubscriptionActivity extends AppCompatActivity {
         });
         queue.add(arrayRequest);
 
+        addSubButton = findViewById(R.id.AddSubsButton);
+        addSubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(SubscriptionActivity.this, AddSubActivity.class);
+                SubscriptionActivity.this.startActivity(myIntent);
+            }
+        });
 
 
 
