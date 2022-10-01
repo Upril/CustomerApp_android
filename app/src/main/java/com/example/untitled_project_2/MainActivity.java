@@ -69,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
         });
         //redirect to login page
 
-//        if(!loggedIn) {
-//            startLogin();
-//        }
+        if(!loggedIn) {
+            menuActivityLauncher.startActivity(LoginActivity.class);
+        }
 
     }
 
