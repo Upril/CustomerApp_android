@@ -21,13 +21,16 @@
         <activity
             android:name=".activities.AddSubActivity"
             android:exported="false"
-            android:theme="@style/Theme.Untitled_Project_2.NoActionBar"/>
+            android:theme="@style/Theme.Untitled_Project_2.NoActionBar"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activities.SubscriptionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activities.AccountActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -43,14 +46,17 @@
             android:theme="@style/Theme.Untitled_Project_2.NoActionBar" />
         <activity
             android:name=".activities.Vaccines"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

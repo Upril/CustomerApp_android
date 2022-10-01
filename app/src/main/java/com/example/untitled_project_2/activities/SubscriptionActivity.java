@@ -1,6 +1,7 @@
 package com.example.untitled_project_2.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.adapters.SubscriptionAdapter;
+import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
@@ -49,6 +52,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     private MenuActivityLauncher menuActivityLauncher;
     public static ActivityResultLauncher<Intent> mActivityLauncher;
     private int length;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +67,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        menuActivityLauncher = new MenuActivityLauncher(SubscriptionActivity.this);
-        menuActivityLauncher.init(navigationView,drawerLayout,SubscriptionActivity.this,mActivityLauncher);
+
 
         subIds = new ArrayList<String>();
         vaccines = new ArrayList<String>();
@@ -72,7 +75,35 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         //intent get user id
         Intent intent = getIntent();
-        userId = intent.getStringExtra("userId");
+        token = intent.getStringExtra("token");
+        //wydobadz userid z tokena
+
+        mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                Bundle bundle = result.getData().getExtras();
+                //zmien na string w values
+                String resultString = bundle.getString("ActivityResult");
+                switch (resultString) {
+//                    case "loginOK":
+//                        token = bundle.getString("token");
+//                        loggedIn = true;
+//                        Log.i("Main JWT","Received");
+//                        try{
+//                            JWTUtils.decode(token);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        //Toast.makeText(this, "Odebrano wiadomość, Witaj "+userName,Toast.LENGTH_SHORT).show();
+//                        break;
+                }
+            }
+            if (result.getResultCode() == RESULT_CANCELED) {
+                Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
+            }
+        });
+        menuActivityLauncher = new MenuActivityLauncher(SubscriptionActivity.this,mActivityLauncher,token);
+        menuActivityLauncher.init(navigationView,drawerLayout,SubscriptionActivity.this,mActivityLauncher);
 
         //ssl disable
         ssl.SSlDisable();

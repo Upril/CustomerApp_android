@@ -2,6 +2,7 @@ package com.example.untitled_project_2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -19,8 +20,11 @@ import com.google.android.material.navigation.NavigationView;
 public class MenuActivityLauncher {
     private Context mContext;
     private ActivityResultLauncher<Intent> mActivityLauncher;
-    public MenuActivityLauncher(Context context){
+    private String mToken;
+    public MenuActivityLauncher(Context context, ActivityResultLauncher activityResultLauncher, String token){
         mContext = context;
+        mActivityLauncher = activityResultLauncher;
+        mToken = token;
     }
     public void init(NavigationView navigationView, DrawerLayout drawerLayout, Context context, ActivityResultLauncher<Intent> mActivityLauncher){
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -63,23 +67,15 @@ public class MenuActivityLauncher {
     }
     public void startActivity(Class c) {
         Intent intent = new Intent(mContext, c);
-        mActivityLauncher.launch(intent);
-    }
-    public void startActivity(Class c, String JWT){
-        Intent intent = new Intent(mContext, c);
-        intent.putExtra("token",JWT);
+        intent.putExtra("token",mToken);
         mActivityLauncher.launch(intent);
     }
     public void returnHome() {
         Intent intent = new Intent(mContext , MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Bundle bundle = new Bundle(2);
+        bundle.putString("token",mToken);
+        bundle.putString("ActivityResult","loginOK");
         mContext.startActivity(intent);
     }
-    public void returnHome(String JWT) {
-        Intent intent = new Intent(mContext , MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("token",JWT);
-        mContext.startActivity(intent);
-    }
-
 }

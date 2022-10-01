@@ -50,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         GotoRegisterButton = findViewById(R.id.GotoRegisterButton);
         String regexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Pattern pattern = Pattern.compile(regexPattern);
-        MenuActivityLauncher menuActivityLauncher = new MenuActivityLauncher(this);
 
         //ssl disable
         ssl.SSlDisable();
