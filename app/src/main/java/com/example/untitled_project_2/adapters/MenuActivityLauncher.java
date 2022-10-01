@@ -63,12 +63,22 @@ public class MenuActivityLauncher {
     }
     public void startActivity(Class c) {
         Intent intent = new Intent(mContext, c);
-        mContext.startActivity(intent);
+        mActivityLauncher.launch(intent);
     }
-
+    public void startActivity(Class c, String JWT){
+        Intent intent = new Intent(mContext, c);
+        intent.putExtra("token",JWT);
+        mActivityLauncher.launch(intent);
+    }
     public void returnHome() {
         Intent intent = new Intent(mContext , MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mContext.startActivity(intent);
+    }
+    public void returnHome(String JWT) {
+        Intent intent = new Intent(mContext , MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("token",JWT);
         mContext.startActivity(intent);
     }
 

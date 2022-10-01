@@ -19,6 +19,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
 
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         GotoRegisterButton = findViewById(R.id.GotoRegisterButton);
         String regexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Pattern pattern = Pattern.compile(regexPattern);
+        MenuActivityLauncher menuActivityLauncher = new MenuActivityLauncher(this);
 
         //ssl disable
         ssl.SSlDisable();
@@ -104,6 +106,13 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                                 try {
                                     JWTUtils.decode(response.toString());
+                                    Bundle bundle = new Bundle(2);
+                                    bundle.putString("token",response.toString());
+                                    bundle.putString("ActivityResult","loginOK");
+                                    Intent intent = new Intent();
+                                    intent.putExtras(bundle);
+                                    setResult(RESULT_OK,intent);
+                                    finish();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

@@ -20,6 +20,7 @@ import com.example.untitled_project_2.activities.LoginActivity;
 import com.example.untitled_project_2.activities.SettingsActivity;
 import com.example.untitled_project_2.activities.SubscriptionActivity;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
+import com.example.untitled_project_2.networking.JWTUtils;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
                     case "loginOK":
                         token = bundle.getString("token");
                         loggedIn = true;
+                        Log.i("Main JWT","Received");
+                        try{
+                            JWTUtils.decode(token);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         //Toast.makeText(this, "Odebrano wiadomość, Witaj "+userName,Toast.LENGTH_SHORT).show();
                         break;
@@ -70,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         //redirect to login page
 
         if(!loggedIn) {
-            menuActivityLauncher.startActivity(LoginActivity.class);
+            Intent intent = new Intent(this,LoginActivity.class);
+            mActivityLauncher.launch(intent);
         }
 
     }
