@@ -10,14 +10,14 @@
         android:id="@+id/RegisterLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="Rejestracja"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13999999" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RegisterRv"
@@ -33,10 +33,22 @@
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="214dp"
         android:layout_height="76dp"
-        android:text="Register"
+        android:text="Zarejestruj się"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegisterRv" />
+        app:layout_constraintTop_toBottomOf="@+id/RegisterRv"
+        android:visibility="invisible"/>
+    <Button
+        android:id="@+id/RegisterCancelButton"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="214dp"
+        android:layout_height="76dp"
+        android:text="Anuluj"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Registerbutton"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

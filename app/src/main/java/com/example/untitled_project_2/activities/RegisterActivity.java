@@ -15,12 +15,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.RegisterAdapter;
 import com.example.untitled_project_2.networking.SSLRules;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,8 +43,10 @@ public class RegisterActivity extends AppCompatActivity {
     private RecyclerView rvRegister;
     private Button registerButton;
     private String URLline = "https://10.0.2.2:7277/api/account/register/";
+    private String CityUrl = "https://10.0.2.2:7277/api/account/getAllCities/";
     private ArrayList<String> fieldsArray;
     private ArrayList<String> valuesArray;
+    private ArrayList<String> citiesArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,34 @@ public class RegisterActivity extends AppCompatActivity {
         rvRegister.getRecycledViewPool().setMaxRecycledViews(0,15);
         rvRegister.setItemViewCacheSize(15);
 
-        RegisterAdapter registerAdapter = new RegisterAdapter(this, fieldsArray, valuesArray);
+        //get cities
+        citiesArray = new ArrayList<String>();
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, CityUrl,null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response != null && response.length() > 0){
+                            for(int i = 0; i<response.length();i++){
+                                try {
+                                    JSONObject sub = response.getJSONObject(i);
+                                    citiesArray.add(sub.getString("Name"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Error",error.toString());
+            }
+        });
+
+        queue.add(arrayRequest);
+
+        RegisterAdapter registerAdapter = new RegisterAdapter(this, fieldsArray, valuesArray,citiesArray);
         rvRegister.setAdapter(registerAdapter);
         rvRegister.setLayoutManager(new LinearLayoutManager(this));
 
@@ -129,14 +160,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 return null;
                             }
                         }
-//                            @Override
-//                            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-//                                String responseString = "";
-//                                if (response != null) {
-//                                    responseString = String.valueOf(response.statusCode);
-//                                }
-//                                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-//                            }
                     };
 
                     queue.add(stringRequest);
