@@ -6,7 +6,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,12 +36,15 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
     private ArrayList<String> mfieldsArray;
     private ArrayList<String> mresultsArray;
     private ArrayList<String> mCitiesArray;
+    private Button mSubmitButton;
 
-    public RegisterAdapter(Activity activity, ArrayList<String> fieldsArray, ArrayList<String> resultsArray, ArrayList<String> citiesArray){
+    public RegisterAdapter(Activity activity, ArrayList<String> fieldsArray, ArrayList<String> resultsArray, ArrayList<String> citiesArray, Button submitButton){
         mActivity = activity;
         mfieldsArray = fieldsArray;
         mresultsArray = resultsArray;
         mCitiesArray = citiesArray;
+        mSubmitButton = submitButton;
+
     }
 
     //launches when we create Recyclerview
@@ -62,13 +67,25 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
         String registerField = mfieldsArray.get(position);
         holder.RegisterText.setText(registerField);
         holder.RegisterEdit.setTag(position);
+        switch (registerField){
+            case "Potwierdź hasło":
+                holder.RegisterEdit.setHint("Potwierdź Hasło");
+                break;
+            case "Ulica":
+                holder.RegisterEdit.setHint("Podaj Ulicę");
+                break;
+            case "Telefon":
+                holder.RegisterEdit.setHint("Podaj Numer Telefonu");
+                break;
+            default:
+                holder.RegisterEdit.setHint("Podaj "+registerField);
+        }
         if(position == mfieldsArray.size() -1){
             holder.RegisterEdit.setVisibility(View.GONE);
             holder.RegisterSpinner.setVisibility(View.VISIBLE);
-
+            holder.RegisterSpinner.setTag(position);
             ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(holder.RegisterSpinner.getContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mCitiesArray);
             holder.RegisterSpinner.setAdapter(adapterCity);
-
         }
 
         //holder.signupButton.setTag(position);
@@ -113,13 +130,47 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
                 public void afterTextChanged(Editable editable) {
                     if (!isBinding){
                         int clickedPos = (Integer)RegisterEdit.getTag();
-                        //tu walidacja
-                        Log.i("Position: ",Integer.toString(clickedPos));
-                        mresultsArray.set(clickedPos,RegisterEdit.getText().toString());
+                        if(RegisterEdit.getText().toString().length() < 1)
+                        {
+                            RegisterEdit.setError("Pole "+mfieldsArray.get(clickedPos)+" nie może być puste");
+                        }
+                        else{
+                            mresultsArray.set(clickedPos,RegisterEdit.getText().toString());
+                            validate();
+                        }
+
                     }
                 }
             });
+            RegisterEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (!b && !isBinding){
+                        int clickedPos = (Integer)RegisterEdit.getTag();
+                        if(RegisterEdit.getText().toString().length() < 1)
+                        {
+                            RegisterEdit.setError("Pole "+mfieldsArray.get(clickedPos)+" nie może być puste");
+                            validate();
+                        }
+                    }
+                }
+            });
+            RegisterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (!isBinding){
+                        int clickedPos = (Integer)RegisterSpinner.getTag();
+                        int choice = RegisterSpinner.getSelectedItemPosition();
+                        mresultsArray.set(clickedPos,Integer.toString(choice));
+                        validate();
+                    }
+                }
 
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
 
         }
 
@@ -141,6 +192,23 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
         @Override
         public void onClick(View view) {
 
+        }
+        private void validate()
+        {
+            boolean everythingChecked = true;
+            for (int i=0;i<getItemCount();i++)
+            {
+                if (mresultsArray.get(i).length() < 1)
+                {
+                    //commented for testing
+                    //everythingChecked = false;
+                    break;
+                }
+            }
+            if (everythingChecked)
+            {
+                mSubmitButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.untitled_project_2.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,13 +9,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -42,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
     private SSLRules ssl = new SSLRules();
     private RecyclerView rvRegister;
     private Button registerButton;
+    private Button cancelButton;
     private String URLline = "https://10.0.2.2:7277/api/account/register/";
     private String CityUrl = "https://10.0.2.2:7277/api/account/getAllCities/";
     private ArrayList<String> fieldsArray;
@@ -72,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         rvRegister = (RecyclerView)findViewById(R.id.RegisterRv);
         registerButton = (Button)findViewById(R.id.Registerbutton);
+        cancelButton = (Button)findViewById(R.id.RegisterCancelButton);
         rvRegister.getRecycledViewPool().setMaxRecycledViews(0,15);
         rvRegister.setItemViewCacheSize(15);
 
@@ -102,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         queue.add(arrayRequest);
 
-        RegisterAdapter registerAdapter = new RegisterAdapter(this, fieldsArray, valuesArray,citiesArray);
+        RegisterAdapter registerAdapter = new RegisterAdapter(this, fieldsArray, valuesArray,citiesArray,registerButton);
         rvRegister.setAdapter(registerAdapter);
         rvRegister.setLayoutManager(new LinearLayoutManager(this));
 
@@ -138,13 +144,46 @@ public class RegisterActivity extends AppCompatActivity {
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, URLline, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            //smthn smthn
-
+                            Toast.makeText(RegisterActivity.this,"Konto zostało utworzone, teraz należy się zalogować",Toast.LENGTH_LONG).show();
+                            finish();
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e("LOG_RESPONSE", error.toString());
+                            NetworkResponse response = error.networkResponse;
+                            String json = "";
+                            if(response != null && response.data != null) {
+                                switch (response.statusCode) {
+                                    case 400:
+                                        json = new String(response.data);
+                                        try {
+                                            JSONObject errorJson = new JSONObject(json);
+                                            JSONObject errors = errorJson.getJSONObject("errors");
+                                            ArrayList<JSONArray> errorMessages = new ArrayList<JSONArray>(12);
+                                            String[] keys = {"Email","Pesel","Surname","Password","FirstName","PhoneNumber","AddressDto.FlatNumber","AddressDto.PostalCode","AddressDto.StreetName","AddressDto.BuildingNumber"};
+                                            String alertMessage = "";
+                                            for (String key:keys){
+                                                if (errors.has(key)){
+                                                    errorMessages.add(errors.getJSONArray(key));
+                                                }
+                                            }
+                                            for(JSONArray message:errorMessages){
+                                                Log.e("RegisterError",message.getString(0));
+                                                alertMessage += message.getString(0) + "\n\n";
+
+
+                                            }
+                                            new AlertDialog.Builder(RegisterActivity.this).setTitle("Błąd rejestracji").setMessage(alertMessage)
+                                                    .setPositiveButton("OK", null).setIcon(R.drawable.ic_stop_black).show();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+                                        break;
+                                }
+                            }
                         }
                     }) {
                         @Override
@@ -166,6 +205,12 @@ public class RegisterActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 
