@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("Main JWT","Received");
                         try{
                             JWTUtils.decode(token);
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
