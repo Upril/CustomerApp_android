@@ -87,37 +87,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         loginButton.setOnClickListener(view -> {
-
             if (emailValid && passwordValid) {
-                try {
-                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    JSONObject jsonBody = new JSONObject();
-                    jsonBody.put("email", EmailText.getText().toString());
-                    jsonBody.put("password", PasswordText.getText().toString());
-                    final String mRequestBody = jsonBody.toString();
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URLline, LoginActivity.this::saveJWT, error -> {
-                        try {
-                            String errorResponse = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers, "utf-8"));
-                            new AlertDialog.Builder(LoginActivity.this).setTitle("Błąd logowania").setMessage(errorResponse)
-                                    .setPositiveButton("OK", null).setIcon(R.drawable.ic_stop_black).show();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }) {
-                        @Override
-                        public String getBodyContentType() {
-                            return "application/json; charset=utf-8";
-                        }
-                        @Override
-                        public byte[] getBody() {
-                            return mRequestBody.getBytes(StandardCharsets.UTF_8);
-                        }
-                    };
-
-                    queue.add(stringRequest);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                login();
             } else {
                 Toast.makeText(getApplicationContext(), "Niepoprawny Email lub haslo", Toast.LENGTH_LONG).show();
             }
@@ -136,6 +107,37 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+    private void login(){
+        try {
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("email", EmailText.getText().toString());
+            jsonBody.put("password", PasswordText.getText().toString());
+            final String mRequestBody = jsonBody.toString();
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URLline, LoginActivity.this::saveJWT, error -> {
+                try {
+                    String errorResponse = new String(error.networkResponse.data,
+                            HttpHeaderParser.parseCharset(error.networkResponse.headers, "utf-8"));
+                    new AlertDialog.Builder(LoginActivity.this).setTitle("Błąd logowania").setMessage(errorResponse)
+                            .setPositiveButton("OK", null).setIcon(R.drawable.ic_stop_black).show();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+                @Override
+                public byte[] getBody() {
+                    return mRequestBody.getBytes(StandardCharsets.UTF_8);
+                }
+            };
+            queue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -57,6 +57,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
         holder.RegisterEdit.setTag(position);
         switch (registerField){
             case "Hasło":
+                holder.RegisterEdit.setHint("Hasło");
                 holder.RegisterEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;
             case "Potwierdź hasło":
@@ -76,7 +77,8 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
             holder.RegisterEdit.setVisibility(View.GONE);
             holder.RegisterSpinner.setVisibility(View.VISIBLE);
             holder.RegisterSpinner.setTag(position);
-            ArrayAdapter<String> adapterCity = new ArrayAdapter<>(holder.RegisterSpinner.getContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mCitiesArray);
+            ArrayAdapter<String> adapterCity = new ArrayAdapter<>(holder.RegisterSpinner.getContext(),
+                    androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mCitiesArray);
             holder.RegisterSpinner.setAdapter(adapterCity);
         }
 

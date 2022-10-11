@@ -123,7 +123,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 JSONObject errorJson = new JSONObject(json);
                                 JSONObject errors = errorJson.getJSONObject("errors");
                                 ArrayList<JSONArray> errorMessages = new ArrayList<>(12);
-                                String[] keys = {"Email", "Pesel", "Surname", "Password", "FirstName", "PhoneNumber", "AddressDto.FlatNumber", "AddressDto.PostalCode", "AddressDto.StreetName", "AddressDto.BuildingNumber"};
+                                String[] keys = {"Email", "Pesel", "Surname", "Password", "FirstName", "PhoneNumber",
+                                        "AddressDto.FlatNumber", "AddressDto.PostalCode", "AddressDto.StreetName", "AddressDto.BuildingNumber"};
                                 StringBuilder alertMessage = new StringBuilder();
                                 for (String key : keys) {
                                     if (errors.has(key)) {
