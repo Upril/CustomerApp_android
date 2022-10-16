@@ -68,7 +68,7 @@ public class AccountActivity extends AppCompatActivity {
         //intent get user id
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
-        Toast.makeText(this, "token: "+token,Toast.LENGTH_LONG).show();
+
 
         int userId = 1002;
         //wydobadz userid z tokena
@@ -91,7 +91,6 @@ public class AccountActivity extends AppCompatActivity {
         RecyclerView rvAccount = (RecyclerView) findViewById(R.id.AccountRv);
         Button accountEditButton = (Button) findViewById(R.id.AccountEditButton);
         Button cancelButton = (Button) findViewById(R.id.AccountEditCancelButton);
-        cancelButton.setText(token);
         rvAccount.getRecycledViewPool().setMaxRecycledViews(0, 15);
         rvAccount.setItemViewCacheSize(15);
 
@@ -113,6 +112,10 @@ public class AccountActivity extends AppCompatActivity {
                             valuesArray.add(address.getString("FlatNumber"));
                             valuesArray.add(address.getString("BuildingNumber"));
                             valuesArray.add(address.getString("CityId"));
+
+                            AccountAdapter accountAdapter = new AccountAdapter(this, fieldsArray, valuesArray, citiesArray, accountEditButton);
+                            rvAccount.setAdapter(accountAdapter);
+                            rvAccount.setLayoutManager(new LinearLayoutManager(this));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -145,9 +148,7 @@ public class AccountActivity extends AppCompatActivity {
                 }, error -> Log.i("Error", error.toString()));
         queue.add(arrayRequest);
 
-        AccountAdapter accountAdapter = new AccountAdapter(this, fieldsArray, valuesArray, citiesArray, accountEditButton);
-        rvAccount.setAdapter(accountAdapter);
-        rvAccount.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
     @Override

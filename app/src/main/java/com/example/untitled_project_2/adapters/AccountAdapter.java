@@ -22,14 +22,14 @@ import java.util.ArrayList;
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountAdapterViewHolder> {
     private final Activity mActivity;
     private final ArrayList<String> mfieldsArray;
-    private final ArrayList<String> mresultsArray;
+    private final ArrayList<String> mValuesArray;
     private final ArrayList<String> mCitiesArray;
     private final Button mSubmitButton;
 
     public AccountAdapter(Activity activity, ArrayList<String> fieldsArray, ArrayList<String> resultsArray, ArrayList<String> citiesArray, Button submitButton){
         mActivity = activity;
         mfieldsArray = fieldsArray;
-        mresultsArray = resultsArray;
+        mValuesArray = resultsArray;
         mCitiesArray = citiesArray;
         mSubmitButton = submitButton;
     }
@@ -39,11 +39,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
     @Override
     public AccountAdapter.AccountAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        for(int i = 0;i<getItemCount();i++) {
-            mresultsArray.add("");
-        }
 
-        View rowRootview = mActivity.getLayoutInflater().inflate(R.layout.register_row,parent,false);
+        View rowRootview = mActivity.getLayoutInflater().inflate(R.layout.account_row,parent,false);
         return new AccountAdapter.AccountAdapterViewHolder(rowRootview);
     }
     //launches when we need to create new row
@@ -51,7 +48,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
     public void onBindViewHolder(@NonNull AccountAdapter.AccountAdapterViewHolder holder, int position) {
         holder.isBinding = true;
         String registerField = mfieldsArray.get(position);
+        String placeholder = mValuesArray.get(position);
         holder.RegisterText.setText(registerField);
+        holder.RegisterEdit.setText(placeholder);
         holder.RegisterEdit.setTag(position);
         switch (registerField){
             case "Hasło":
@@ -102,9 +101,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
         public AccountAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             //init fields, set listeners
-            RegisterEdit = (EditText)itemView.findViewById(R.id.RegisterEditText);
-            RegisterText = (TextView) itemView.findViewById(R.id.RegisterTextview);
-            RegisterSpinner = (Spinner) itemView.findViewById(R.id.RegisterSpinner);
+            RegisterEdit = (EditText)itemView.findViewById(R.id.AccountEditText);
+            RegisterText = (TextView) itemView.findViewById(R.id.AccountTextview);
+            RegisterSpinner = (Spinner) itemView.findViewById(R.id.AccountSpinner);
 
 //            RegisterEdit.setOnFocusChangeListener((view, b) -> {
 //                if (!b && !isBinding){
