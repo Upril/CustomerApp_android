@@ -6,6 +6,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
     private final ArrayList<String> mfieldsArray;
     private final ArrayList<String> mValuesArray;
     private final ArrayList<String> mCitiesArray;
+    private ArrayList<String> initialValuesArray;
     private final Button mSubmitButton;
 
     public AccountAdapter(Activity activity, ArrayList<String> fieldsArray, ArrayList<String> resultsArray, ArrayList<String> citiesArray, Button submitButton){
@@ -38,8 +40,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
     @NonNull
     @Override
     public AccountAdapter.AccountAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-
+        initialValuesArray = new ArrayList<>(mValuesArray.size());
+        initialValuesArray.addAll(mValuesArray);
         View rowRootview = mActivity.getLayoutInflater().inflate(R.layout.account_row,parent,false);
         return new AccountAdapter.AccountAdapterViewHolder(rowRootview);
     }
@@ -77,6 +79,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
             ArrayAdapter<String> adapterCity = new ArrayAdapter<>(holder.RegisterSpinner.getContext(),
                     androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mCitiesArray);
             holder.RegisterSpinner.setAdapter(adapterCity);
+            holder.RegisterSpinner.setSelection(Integer.parseInt(mValuesArray.get(mValuesArray.size()-1))-1);
         }
 
 
@@ -91,7 +94,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
 
     //view holder zarządza pojedynczym wierszem listy
     //to dobre miejsce na zaimplementowanie słuchaczy
-    class AccountAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, TextWatcher {
+    class AccountAdapterViewHolder extends RecyclerView.ViewHolder{
         //initialize fields
         public TextView RegisterText;
         public EditText RegisterEdit;
@@ -105,38 +108,78 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
             RegisterText = (TextView) itemView.findViewById(R.id.AccountTextview);
             RegisterSpinner = (Spinner) itemView.findViewById(R.id.AccountSpinner);
 
-//            RegisterEdit.setOnFocusChangeListener((view, b) -> {
-//                if (!b && !isBinding){
-//                    int clickedPos = (Integer)RegisterEdit.getTag();
-//                    if(RegisterEdit.getText().toString().length() < 1)
-//                    {
-//                        RegisterEdit.setError("Pole "+mfieldsArray.get(clickedPos)+" nie może być puste");
-//                        validate();
-//                    }
-//                }
-//            });
+            RegisterEdit.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+                }
 
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (!isBinding){
+                        int clickedPos = (Integer)RegisterEdit.getTag();
+                        if(RegisterEdit.getText().toString().length() < 1)
+                        {
+                            RegisterEdit.setError("Pole "+mfieldsArray.get(clickedPos)+" nie może być puste");
+                        }
+                        else{
+                            mValuesArray.set(clickedPos,RegisterEdit.getText().toString());
+                            validate();
+                        }
+
+                    }
+                }
+            });
+            RegisterEdit.setOnFocusChangeListener((view, b) -> {
+                if (!b && !isBinding){
+                    int clickedPos = (Integer)RegisterEdit.getTag();
+                    if(RegisterEdit.getText().toString().length() < 1)
+                    {
+                        RegisterEdit.setError("Pole "+mfieldsArray.get(clickedPos)+" nie może być puste");
+                        validate();
+                    }
+                }
+            });
+            RegisterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (!isBinding){
+                        int clickedPos = (Integer)RegisterSpinner.getTag();
+                        int choice = RegisterSpinner.getSelectedItemPosition();
+                        mValuesArray.set(clickedPos,Integer.toString(choice+1));
+                        validate();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         }
+        private void validate()
+        {
+            boolean everythingChecked = true;
+            boolean dataChanged = !initialValuesArray.equals(mValuesArray);
+            for (int i=0;i<getItemCount();i++)
+            {
+                if (mValuesArray.get(i).length() < 1)
+                {
+                    //commented for testing
+                    everythingChecked = false;
+                    break;
 
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-
-        @Override
-        public void onClick(View view) {
-
+                }
+            }
+            if (everythingChecked && dataChanged)
+            {
+                mSubmitButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

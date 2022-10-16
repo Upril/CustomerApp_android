@@ -95,7 +95,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
 
     //view holder zarządza pojedynczym wierszem listy
     //to dobre miejsce na zaimplementowanie słuchaczy
-    class RegisterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, TextWatcher {
+    class RegisterAdapterViewHolder extends RecyclerView.ViewHolder{
         //initialize fields
         public TextView RegisterText;
         public EditText RegisterEdit;
@@ -162,26 +162,6 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.Regist
 
                 }
             });
-
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-
-        @Override
-        public void onClick(View view) {
 
         }
         private void validate()

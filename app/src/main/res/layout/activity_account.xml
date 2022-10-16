@@ -25,22 +25,13 @@
             android:layout_width="211dp"
             android:layout_height="53dp"
             android:text="Dodaj Subskrypcję"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/AccountRv"
             app:layout_constraintVertical_bias="0.135" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/AccountEditCancelButton"
-            android:layout_width="209dp"
-            android:layout_height="57dp"
-            android:text="Anuluj"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/AccountEditButton"
-            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

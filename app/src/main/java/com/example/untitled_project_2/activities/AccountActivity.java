@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,10 +14,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.PointerIcon;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -30,9 +34,11 @@ import com.example.untitled_project_2.adapters.RegisterAdapter;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +96,6 @@ public class AccountActivity extends AppCompatActivity {
 
         RecyclerView rvAccount = (RecyclerView) findViewById(R.id.AccountRv);
         Button accountEditButton = (Button) findViewById(R.id.AccountEditButton);
-        Button cancelButton = (Button) findViewById(R.id.AccountEditCancelButton);
         rvAccount.getRecycledViewPool().setMaxRecycledViews(0, 15);
         rvAccount.setItemViewCacheSize(15);
 
@@ -116,6 +121,8 @@ public class AccountActivity extends AppCompatActivity {
                             AccountAdapter accountAdapter = new AccountAdapter(this, fieldsArray, valuesArray, citiesArray, accountEditButton);
                             rvAccount.setAdapter(accountAdapter);
                             rvAccount.setLayoutManager(new LinearLayoutManager(this));
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -148,7 +155,12 @@ public class AccountActivity extends AppCompatActivity {
                 }, error -> Log.i("Error", error.toString()));
         queue.add(arrayRequest);
 
-
+        accountEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                POSTRequest();
+            }
+        });
 
     }
     @Override
@@ -157,5 +169,79 @@ public class AccountActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void POSTRequest(){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        JSONObject jsonBody = new JSONObject();
+        JSONObject jsonAddress = new JSONObject();
+
+        //filling json array with gathered data from RegisterAdapter
+        try {
+            jsonBody.put("Id", 1002);
+            jsonBody.put("FirstName", valuesArray.get(0));
+            jsonBody.put("Surname", valuesArray.get(1));
+            jsonBody.put("PhoneNumber", valuesArray.get(2));
+            jsonBody.put("Pesel", valuesArray.get(3));
+            jsonBody.put("Email", valuesArray.get(4));
+            jsonAddress.put("PostalCode", valuesArray.get(5));
+            jsonAddress.put("StreetName", valuesArray.get(6));
+            jsonAddress.put("FlatNumber", valuesArray.get(7));
+            jsonAddress.put("BuildingNumber", valuesArray.get(8));
+            jsonAddress.put("CityId", valuesArray.get(9));
+            jsonBody.put("AddressDto", jsonAddress);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String mRequestBody = jsonBody.toString();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://10.0.2.2:7277/api/account/edit/", response -> {
+            Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show();
+        }, error -> {
+            NetworkResponse response = error.networkResponse;
+            String json;
+            if (response != null && response.data != null) {
+                if (response.statusCode == 400) {
+                    json = new String(response.data);
+                    try {
+                        JSONObject errorJson = new JSONObject(json);
+                        JSONObject errors = errorJson.getJSONObject("errors");
+                        ArrayList<JSONArray> errorMessages = new ArrayList<>(12);
+                        String[] keys = {"Email", "Pesel", "Surname", "Password", "FirstName", "PhoneNumber",
+                                "AddressDto.FlatNumber", "AddressDto.PostalCode", "AddressDto.StreetName", "AddressDto.BuildingNumber"};
+                        StringBuilder alertMessage = new StringBuilder();
+                        for (String key : keys) {
+                            if (errors.has(key)) {
+                                errorMessages.add(errors.getJSONArray(key));
+                            }
+                        }
+                        for (JSONArray message : errorMessages) {
+                            Log.e("RegisterError", message.getString(0));
+                            alertMessage.append(message.getString(0)).append("\n\n");
+                        }
+                        new AlertDialog.Builder(AccountActivity.this).setTitle("Błąd aktualizacji").setMessage(alertMessage.toString())
+                                .setPositiveButton("OK", null).setIcon(R.drawable.ic_stop_black).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+            @Override
+            public byte[] getBody() {
+                return mRequestBody.getBytes(StandardCharsets.UTF_8);
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+
+        };
+        queue.add(stringRequest);
     }
 }
