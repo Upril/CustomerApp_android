@@ -9,17 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.PointerIcon;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,18 +25,16 @@ import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.AccountAdapter;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
-import com.example.untitled_project_2.adapters.RegisterAdapter;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AccountActivity extends AppCompatActivity {
 
@@ -86,7 +79,7 @@ public class AccountActivity extends AppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
         MenuActivityLauncher menuActivityLauncher = new MenuActivityLauncher(AccountActivity.this,mActivityLauncher,token);
         menuActivityLauncher.init(navigationView,drawerLayout);
@@ -94,8 +87,8 @@ public class AccountActivity extends AppCompatActivity {
         //ssl disable
         ssl.SSlDisable();
 
-        RecyclerView rvAccount = (RecyclerView) findViewById(R.id.AccountRv);
-        Button accountEditButton = (Button) findViewById(R.id.AccountEditButton);
+        RecyclerView rvAccount = findViewById(R.id.AccountRv);
+        Button accountEditButton = findViewById(R.id.AccountEditButton);
         rvAccount.getRecycledViewPool().setMaxRecycledViews(0, 15);
         rvAccount.setItemViewCacheSize(15);
 
@@ -129,8 +122,8 @@ public class AccountActivity extends AppCompatActivity {
                     }
                 }, error -> Log.i("Error", error.toString())) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
                 return headers;
             }
@@ -155,12 +148,7 @@ public class AccountActivity extends AppCompatActivity {
                 }, error -> Log.i("Error", error.toString()));
         queue.add(arrayRequest);
 
-        accountEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                POSTRequest();
-            }
-        });
+        accountEditButton.setOnClickListener(view -> POSTRequest());
 
     }
     @Override
@@ -194,9 +182,7 @@ public class AccountActivity extends AppCompatActivity {
         }
 
         final String mRequestBody = jsonBody.toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://10.0.2.2:7277/api/account/edit/", response -> {
-            Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show();
-        }, error -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://10.0.2.2:7277/api/account/edit/", response -> Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show(), error -> {
             NetworkResponse response = error.networkResponse;
             String json;
             if (response != null && response.data != null) {
@@ -235,8 +221,8 @@ public class AccountActivity extends AppCompatActivity {
                 return mRequestBody.getBytes(StandardCharsets.UTF_8);
             }
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
                 return headers;
             }
