@@ -104,9 +104,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
         public AccountAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             //init fields, set listeners
-            RegisterEdit = (EditText)itemView.findViewById(R.id.AccountEditText);
-            RegisterText = (TextView) itemView.findViewById(R.id.AccountTextview);
-            RegisterSpinner = (Spinner) itemView.findViewById(R.id.AccountSpinner);
+            RegisterEdit = itemView.findViewById(R.id.AccountEditText);
+            RegisterText = itemView.findViewById(R.id.AccountTextview);
+            RegisterSpinner = itemView.findViewById(R.id.AccountSpinner);
 
             RegisterEdit.addTextChangedListener(new TextWatcher() {
                 @Override

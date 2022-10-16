@@ -24,7 +24,7 @@
             android:id="@+id/AccountEditButton"
             android:layout_width="211dp"
             android:layout_height="53dp"
-            android:text="Dodaj Subskrypcję"
+            android:text="@string/zaktualizuj_dane"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
