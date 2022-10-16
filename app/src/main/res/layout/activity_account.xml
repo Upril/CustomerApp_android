@@ -11,30 +11,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="21dp"
-            tools:layout_editor_absoluteY="18dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/AccountRv"
+            android:layout_width="396dp"
+            android:layout_height="566dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="158dp"
-            tools:layout_editor_absoluteY="15dp" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/AccountEditButton"
+            android:layout_width="211dp"
+            android:layout_height="53dp"
+            android:text="Dodaj Subskrypcję"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AccountRv"
+            app:layout_constraintVertical_bias="0.135" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="165dp"
-            tools:layout_editor_absoluteY="631dp" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/AccountEditCancelButton"
+            android:layout_width="209dp"
+            android:layout_height="57dp"
+            android:text="Anuluj"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AccountEditButton"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

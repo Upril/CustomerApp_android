@@ -4,7 +4,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +26,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.adapters.SubscriptionAdapter;
-import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
@@ -39,8 +37,10 @@ import java.util.ArrayList;
 
 public class SubscriptionActivity extends AppCompatActivity {
 
-    private SSLRules ssl = new SSLRules();
+    private final SSLRules ssl = new SSLRules();
+    //decode JWT
     private String userId;
+
     private Button addSubButton;
     private ArrayList<String> cities;
     private ArrayList<String> vaccines;

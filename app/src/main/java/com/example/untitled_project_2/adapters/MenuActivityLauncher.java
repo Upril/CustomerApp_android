@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.untitled_project_2.MainActivity;
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.activities.AccountActivity;
 import com.example.untitled_project_2.activities.SettingsActivity;
 import com.example.untitled_project_2.activities.SubscriptionActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -33,7 +34,7 @@ public class MenuActivityLauncher {
                 switch (item.getItemId()) {
                     case R.id.menuAccount:
                         Log.i("Account clicked", "Account was clicked");
-                        //mActivityLauncher.launch();
+                        startActivity(AccountActivity.class);
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     case R.id.menuSubscriptions:
