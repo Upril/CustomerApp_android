@@ -41,7 +41,6 @@ public class SubscriptionActivity extends AppCompatActivity {
     //decode JWT
     private String userId;
 
-    private Button addSubButton;
     private ArrayList<String> cities;
     private ArrayList<String> vaccines;
     private ArrayList<String> subIds;
@@ -103,7 +102,7 @@ public class SubscriptionActivity extends AppCompatActivity {
             }
         });
         menuActivityLauncher = new MenuActivityLauncher(SubscriptionActivity.this,mActivityLauncher,token);
-        menuActivityLauncher.init(navigationView,drawerLayout,SubscriptionActivity.this,mActivityLauncher);
+        menuActivityLauncher.init(navigationView,drawerLayout);
 
         //ssl disable
         ssl.SSlDisable();
@@ -153,7 +152,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         });
         queue.add(arrayRequest);
 
-        addSubButton = findViewById(R.id.AddSubsButton);
+        Button addSubButton = findViewById(R.id.AddSubsButton);
         addSubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

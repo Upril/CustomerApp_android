@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -43,6 +44,7 @@ public class AccountActivity extends AppCompatActivity {
     public static ActivityResultLauncher<Intent> mActivityLauncher;
     public ArrayList<String> citiesArray;
     private ArrayList<String> valuesArray;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,9 @@ public class AccountActivity extends AppCompatActivity {
 
         //intent get user id
         Intent intent = getIntent();
-        String token = intent.getStringExtra("token");
+        token = intent.getStringExtra("token");
+        Toast.makeText(this, "token: "+token,Toast.LENGTH_LONG).show();
+
         int userId = 1002;
         //wydobadz userid z tokena
 
@@ -79,7 +83,7 @@ public class AccountActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
         MenuActivityLauncher menuActivityLauncher = new MenuActivityLauncher(AccountActivity.this,mActivityLauncher,token);
-        menuActivityLauncher.init(navigationView,drawerLayout,AccountActivity.this,mActivityLauncher);
+        menuActivityLauncher.init(navigationView,drawerLayout);
 
         //ssl disable
         ssl.SSlDisable();
@@ -87,6 +91,7 @@ public class AccountActivity extends AppCompatActivity {
         RecyclerView rvAccount = (RecyclerView) findViewById(R.id.AccountRv);
         Button accountEditButton = (Button) findViewById(R.id.AccountEditButton);
         Button cancelButton = (Button) findViewById(R.id.AccountEditCancelButton);
+        cancelButton.setText(token);
         rvAccount.getRecycledViewPool().setMaxRecycledViews(0, 15);
         rvAccount.setItemViewCacheSize(15);
 
@@ -120,6 +125,7 @@ public class AccountActivity extends AppCompatActivity {
                 return headers;
             }
         };
+        queue.add(arrayRequest1);
 
         //get cities
         citiesArray = new ArrayList<>();

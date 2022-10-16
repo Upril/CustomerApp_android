@@ -32,7 +32,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
         mresultsArray = resultsArray;
         mCitiesArray = citiesArray;
         mSubmitButton = submitButton;
-
     }
 
     //launches when we create Recyclerview

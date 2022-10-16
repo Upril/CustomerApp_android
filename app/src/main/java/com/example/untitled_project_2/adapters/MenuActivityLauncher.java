@@ -19,51 +19,48 @@ import com.example.untitled_project_2.activities.SubscriptionActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class MenuActivityLauncher {
-    private Context mContext;
-    private ActivityResultLauncher<Intent> mActivityLauncher;
-    private String mToken;
+    private final Context mContext;
+    private final ActivityResultLauncher mActivityLauncher;
+    private final String mToken;
     public MenuActivityLauncher(Context context, ActivityResultLauncher activityResultLauncher, String token){
         mContext = context;
         mActivityLauncher = activityResultLauncher;
         mToken = token;
     }
-    public void init(NavigationView navigationView, DrawerLayout drawerLayout, Context context, ActivityResultLauncher<Intent> mActivityLauncher){
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menuAccount:
-                        Log.i("Account clicked", "Account was clicked");
-                        startActivity(AccountActivity.class);
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuSubscriptions:
-                        Log.i("Vaccines clicked", "Vaccines was clicked");
-                        startActivity(SubscriptionActivity.class);
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuMyVaccines:
-                        Log.i("MyVaccines clicked", "MyVaccines was clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuSettings:
-                        Log.i("Settings clicked", "Settings was clicked");
-                        startActivity(SettingsActivity.class);
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuLogout:
-                        Log.i("Logout clicked", "Logout was clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case R.id.menuHome:
-                        Log.i("Home clicked", "Home was clicked");
-                        returnHome();
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                }
-
-                return false;
+    public void init(NavigationView navigationView, DrawerLayout drawerLayout){
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menuAccount:
+                    Log.i("Account clicked", "Account was clicked");
+                    startActivity(AccountActivity.class);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.menuSubscriptions:
+                    Log.i("Vaccines clicked", "Vaccines was clicked");
+                    startActivity(SubscriptionActivity.class);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.menuMyVaccines:
+                    Log.i("MyVaccines clicked", "MyVaccines was clicked");
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.menuSettings:
+                    Log.i("Settings clicked", "Settings was clicked");
+                    startActivity(SettingsActivity.class);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.menuLogout:
+                    Log.i("Logout clicked", "Logout was clicked");
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.menuHome:
+                    Log.i("Home clicked", "Home was clicked");
+                    returnHome();
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
             }
+
+            return false;
         });
     }
     public void startActivity(Class c) {

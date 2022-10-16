@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         token = bundle.getString("token");
                         maintext.setText(token);
                         loggedIn = true;
+                        menuActivityLauncher = new MenuActivityLauncher(MainActivity.this,mActivityLauncher,token);
+                        menuActivityLauncher.init(navigationView, drawerLayout);
                         Log.i("Main JWT","Received");
                         try{
                             JWTUtils.decode(token);
@@ -83,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //do something with data
         });
-        menuActivityLauncher = new MenuActivityLauncher(MainActivity.this,mActivityLauncher,token);
-        menuActivityLauncher.init(navigationView, drawerLayout,MainActivity.this, mActivityLauncher);
+
         //redirect to login page
 
         if(!loggedIn) {
