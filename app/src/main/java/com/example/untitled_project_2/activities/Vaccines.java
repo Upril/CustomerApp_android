@@ -66,9 +66,9 @@ public class Vaccines extends AppCompatActivity {
         rvVaccines.getRecycledViewPool().setMaxRecycledViews(0,15);
         rvVaccines.setItemViewCacheSize(15);
 
-        VaccinesAdapter vaccinesAdapter = new VaccinesAdapter(this);
-        rvVaccines.setAdapter(vaccinesAdapter);
-        rvVaccines.setLayoutManager(new LinearLayoutManager(this));
+//        VaccinesAdapter vaccinesAdapter = new VaccinesAdapter(this);
+//        rvVaccines.setAdapter(vaccinesAdapter);
+//        rvVaccines.setLayoutManager(new LinearLayoutManager(this));
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

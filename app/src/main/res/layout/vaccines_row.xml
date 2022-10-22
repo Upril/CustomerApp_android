@@ -16,23 +16,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/vaccineHour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="vaccineHour"
-        app:layout_constraintBaseline_toBaselineOf="@+id/vaccineDate"
-        app:layout_constraintStart_toEndOf="@+id/vaccineDate" />
 
     <TextView
         android:id="@+id/vaccineName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="68dp"
         android:text="vaccineName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/vaccineHour"
-        app:layout_constraintStart_toEndOf="@+id/vaccineHour" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/vaccineDate"
+        app:layout_constraintStart_toEndOf="@+id/vaccineDate" />
 
     <TextView
         android:id="@+id/facilityName"
@@ -43,6 +35,15 @@
         android:text="facilityName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vaccineDate" />
+
+    <TextView
+        android:id="@+id/facilityAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="facilityAddress"
+        app:layout_constraintBaseline_toBaselineOf="@+id/facilityName"
+        app:layout_constraintStart_toEndOf="@+id/facilityName" />
 
     <Button
         android:id="@+id/vaccineButton"

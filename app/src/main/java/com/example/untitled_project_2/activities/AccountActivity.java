@@ -176,7 +176,7 @@ public class AccountActivity extends AppCompatActivity {
             jsonBody.put("FirstName", valuesArray.get(0));
             jsonBody.put("Surname", valuesArray.get(1));
             jsonBody.put("PhoneNumber", valuesArray.get(2));
-            jsonBody.put("Pesel", valuesArray.get(3));
+//            jsonBody.put("Pesel", valuesArray.get(3));
             jsonBody.put("Email", valuesArray.get(4));
             jsonAddress.put("PostalCode", valuesArray.get(5));
             jsonAddress.put("StreetName", valuesArray.get(6));
@@ -189,7 +189,7 @@ public class AccountActivity extends AppCompatActivity {
         }
 
         final String mRequestBody = jsonBody.toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://10.0.2.2:7277/api/account/edit/", response -> Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show(), error -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, "https://10.0.2.2:7277/api/account/edit/", response -> Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show(), error -> {
             NetworkResponse response = error.networkResponse;
             String json;
             if (response != null && response.data != null) {

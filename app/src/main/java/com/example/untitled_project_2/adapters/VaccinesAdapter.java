@@ -13,18 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.untitled_project_2.R;
 
+import java.util.ArrayList;
+
 public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.VaccinesAdapterViewHolder> {
     private Activity mActivity;
+    private ArrayList<Vaccine> vaccines;
+    private Integer length;
 
-    public VaccinesAdapter(Activity activity){
+    public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1){
         mActivity = activity;
+        vaccines=vaccines1;
+        length=length1;
     }
-
     //launches when we create Recyclerview
     @NonNull
     @Override
     public VaccinesAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View rowRootview = mActivity.getLayoutInflater().inflate(R.layout.vaccines_row,parent,false);
         VaccinesAdapterViewHolder vaccinesAdapterViewHolder = new VaccinesAdapterViewHolder(rowRootview);
         return vaccinesAdapterViewHolder;
@@ -35,6 +39,11 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
         holder.isBinding = true;
 
         holder.signupButton.setTag(position);
+        Vaccine vaccine = vaccines.get(position);
+        holder.vaccineName.setText(vaccine.getVaccineName());
+        holder.vaccineDate.setText(vaccine.getDate());
+        holder.medicalFacility.setText(vaccine.getFacilityName());
+        holder.facilityAddress.setText(vaccine.getAddress());
 
         holder.isBinding = false;
 
@@ -43,7 +52,7 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
     @Override
     public int getItemCount() {
         //zmien potem jak sie bedziesz laczy z baza
-        return 9;
+        return length;
     }
 
     //view holder zarządza pojedynczym wierszem listy
@@ -52,17 +61,15 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
         public TextView medicalFacility;
         public TextView vaccineName;
         public TextView vaccineDate;
-        public TextView vaccineHour;
+        public TextView facilityAddress;
         public Button signupButton;
-        //public TextView doseNumber;
-        //public TextView vaccinationStatus;
         boolean isBinding;
 
         public VaccinesAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             medicalFacility = (TextView) itemView.findViewById(R.id.facilityName);
+            facilityAddress = (TextView) itemView.findViewById(R.id.facilityAddress);
             vaccineName = (TextView) itemView.findViewById(R.id.vaccineName);
-            vaccineHour = (TextView) itemView.findViewById(R.id.vaccineHour);
             vaccineDate = (TextView) itemView.findViewById(R.id.vaccineDate);
             signupButton = (Button) itemView.findViewById(R.id.vaccineButton);
 
@@ -70,8 +77,7 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
                 @Override
                 public void onClick(View view) {
                     if (!isBinding) {
-                        int clickedPos = (Integer) signupButton.getTag();
-                        medicalFacility.setText("kliknieto: "+clickedPos);
+                        //signup tutaj
                     }
                 }
             });

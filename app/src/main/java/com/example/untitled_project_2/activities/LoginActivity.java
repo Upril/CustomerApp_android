@@ -115,12 +115,15 @@ public class LoginActivity extends AppCompatActivity {
             jsonBody.put("email", EmailText.getText().toString());
             jsonBody.put("password", PasswordText.getText().toString());
             final String mRequestBody = jsonBody.toString();
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, URLline, LoginActivity.this::saveJWT, error -> {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    URLline, LoginActivity.this::saveJWT, error -> {
                 try {
                     String errorResponse = new String(error.networkResponse.data,
                             HttpHeaderParser.parseCharset(error.networkResponse.headers, "utf-8"));
-                    new AlertDialog.Builder(LoginActivity.this).setTitle("Błąd logowania").setMessage(errorResponse)
-                            .setPositiveButton("OK", null).setIcon(R.drawable.ic_stop_black).show();
+                    new AlertDialog.Builder(LoginActivity.this)
+                            .setTitle("Błąd logowania").setMessage(errorResponse)
+                            .setPositiveButton("OK", null).
+                            setIcon(R.drawable.ic_stop_black).show();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

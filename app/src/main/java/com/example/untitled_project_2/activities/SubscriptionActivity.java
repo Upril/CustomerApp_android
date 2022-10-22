@@ -134,8 +134,8 @@ public class SubscriptionActivity extends AppCompatActivity {
 
                             }
                             rvSubs = (RecyclerView)findViewById(R.id.subsListRv);
-                            rvSubs.getRecycledViewPool().setMaxRecycledViews(0, 10);
-                            rvSubs.setItemViewCacheSize(10);
+                            rvSubs.getRecycledViewPool().setMaxRecycledViews(0, response.length());
+                            rvSubs.setItemViewCacheSize(response.length());
 
                             SubscriptionAdapter subAdapter = new SubscriptionAdapter(SubscriptionActivity.this, cities, vaccines, subIds, length);
                             rvSubs.setAdapter(subAdapter);

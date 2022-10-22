@@ -54,24 +54,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
         holder.RegisterText.setText(registerField);
         holder.RegisterEdit.setText(placeholder);
         holder.RegisterEdit.setTag(position);
-        switch (registerField){
-            case "Hasło":
-                holder.RegisterEdit.setHint("Hasło");
-                holder.RegisterEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                break;
-            case "Potwierdź hasło":
-                holder.RegisterEdit.setHint("Potwierdź Hasło");
-                holder.RegisterEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                break;
-            case "Ulica":
-                holder.RegisterEdit.setHint("Podaj Ulicę");
-                break;
-            case "Telefon":
-                holder.RegisterEdit.setHint("Podaj Numer Telefonu");
-                break;
-            default:
-                holder.RegisterEdit.setHint("Podaj "+registerField);
-        }
         if(position == mfieldsArray.size() -1){
             holder.RegisterEdit.setVisibility(View.GONE);
             holder.RegisterSpinner.setVisibility(View.VISIBLE);
@@ -170,7 +152,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountA
             {
                 if (mValuesArray.get(i).length() < 1)
                 {
-                    //commented for testing
                     everythingChecked = false;
                     break;
 
