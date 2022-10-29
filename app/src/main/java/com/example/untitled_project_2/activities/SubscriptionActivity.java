@@ -26,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.adapters.SubscriptionAdapter;
+import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
@@ -39,8 +40,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private final SSLRules ssl = new SSLRules();
     //decode JWT
-    private String userId;
-
+    private Integer userId;
     private ArrayList<String> cities;
     private ArrayList<String> vaccines;
     private ArrayList<String> subIds;
@@ -76,6 +76,12 @@ public class SubscriptionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
         //wydobadz userid z tokena
+        try {
+            String[] data = JWTUtils.decode(token);
+            userId = Integer.parseInt(data[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -83,18 +89,7 @@ public class SubscriptionActivity extends AppCompatActivity {
                 //zmien na string w values
                 String resultString = bundle.getString("ActivityResult");
                 switch (resultString) {
-//                    case "loginOK":
-//                        token = bundle.getString("token");
-//                        loggedIn = true;
-//                        Log.i("Main JWT","Received");
-//                        try{
-//                            JWTUtils.decode(token);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        //Toast.makeText(this, "Odebrano wiadomość, Witaj "+userName,Toast.LENGTH_SHORT).show();
-//                        break;
+
                 }
             }
             if (result.getResultCode() == RESULT_CANCELED) {
@@ -109,7 +104,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         //request user subs
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "https://10.0.2.2:7277/api/subscriptions/byUser/2/";
+        String url = "https://10.0.2.2:7277/api/subscriptions/byUser/"+userId+"/";
         JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url,null,
                 new Response.Listener<JSONArray>() {
                     @Override

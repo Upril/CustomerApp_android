@@ -94,12 +94,13 @@ public class MainActivity extends AppCompatActivity {
                         menuActivityLauncher = new MenuActivityLauncher(MainActivity.this,mActivityLauncher,token);
                         menuActivityLauncher.init(navigationView, drawerLayout);
                         Log.i("Main JWT","Received");
-                        try{
-                            JWTUtils.decode(token);
+                        try {
+                            String[] data = JWTUtils.decode(token);
+                            Log.e("Data from decode",data[0]);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        //Toast.makeText(this, "Odebrano wiadomość, Witaj "+userName,Toast.LENGTH_SHORT).show();
+                        getDateRecycler();
                         break;
                 }
             }
@@ -116,6 +117,24 @@ public class MainActivity extends AppCompatActivity {
             mActivityLauncher.launch(intent);
         }
 
+
+
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outstate){
+        outstate.putString("token",token);
+        outstate.putBoolean("loggedIn",loggedIn);
+        super.onSaveInstanceState(outstate);
+    }
+    public void getDateRecycler(){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         String url = "https://10.0.2.2:7277/api/vaccination/getAllFreeDates/";
         JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -150,11 +169,14 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
+
+
+
                             RecyclerView rvVaccines = findViewById(R.id.rvVaccines);
                             //set do długości response
                             rvVaccines.getRecycledViewPool().setMaxRecycledViews(0,15);
                             rvVaccines.setItemViewCacheSize(15);
-                            VaccinesAdapter vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length());
+                            VaccinesAdapter vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length(), token);
                             rvVaccines.setAdapter(vaccinesAdapter);
                             rvVaccines.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         }
@@ -166,25 +188,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(arrayRequest);
-
-
-
-
-
-
-    }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    public void onSaveInstanceState(Bundle outstate){
-        outstate.putString("token",token);
-        outstate.putBoolean("loggedIn",loggedIn);
-        super.onSaveInstanceState(outstate);
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.untitled_project_2.adapters;
 import android.app.Activity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,18 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.networking.JWTUtils;
 
 import java.util.ArrayList;
 
 public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.VaccinesAdapterViewHolder> {
-    private Activity mActivity;
-    private ArrayList<Vaccine> vaccines;
-    private Integer length;
+    private final Activity mActivity;
+    private final ArrayList<Vaccine> vaccines;
+    private final Integer length;
+    private final String token;
+    private String[] data;
 
-    public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1){
+    public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1, String token1){
         mActivity = activity;
         vaccines=vaccines1;
         length=length1;
+        token=token1;
+
     }
     //launches when we create Recyclerview
     @NonNull

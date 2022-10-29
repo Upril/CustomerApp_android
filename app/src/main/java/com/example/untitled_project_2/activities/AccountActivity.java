@@ -27,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.adapters.AccountAdapter;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
+import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
@@ -72,8 +73,15 @@ public class AccountActivity extends AppCompatActivity {
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
 
+        int userId = -1;
+        //jakis token failed czy coś
+        try {
+            String[] data = JWTUtils.decode(token);
+            userId = Integer.parseInt(data[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        int userId = 1002;
         //wydobadz userid z tokena
 
         //init menu
