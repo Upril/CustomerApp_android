@@ -3,38 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/sub_row_style">
 
 
     <TextView
         android:id="@+id/vaccineDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="VaccineDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@+id/vaccineName" />
 
     <TextView
         android:id="@+id/vaccineName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="vaccineName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/vaccineDate"
-        app:layout_constraintStart_toEndOf="@+id/vaccineDate" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/facilityName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         android:text="facilityName"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vaccineDate" />
+        app:layout_constraintTop_toBottomOf="@+id/vaccineDate"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/facilityAddress"
@@ -45,13 +49,15 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/facilityName"
         app:layout_constraintStart_toEndOf="@+id/facilityName" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/vaccineButton"
-        android:layout_width="103dp"
-        android:layout_height="47dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="4dp"
-        android:text="Button"
+        android:layout_width="93dp"
+        android:layout_height="71dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/green"
+        android:drawableTop="@drawable/ic_send"
+        android:text="Zapisz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

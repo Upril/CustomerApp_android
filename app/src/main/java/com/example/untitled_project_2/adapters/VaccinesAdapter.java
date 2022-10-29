@@ -92,7 +92,6 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
             vaccineName = (TextView) itemView.findViewById(R.id.vaccineName);
             vaccineDate = (TextView) itemView.findViewById(R.id.vaccineDate);
             signupButton = (Button) itemView.findViewById(R.id.vaccineButton);
-
             signupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

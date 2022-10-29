@@ -19,18 +19,21 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="31">
         <activity
+            android:name=".MyVaccinesActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.AddSubActivity"
             android:exported="false"
-            android:theme="@style/Theme.Untitled_Project_2.NoActionBar"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Untitled_Project_2.NoActionBar" />
         <activity
             android:name=".activities.SubscriptionActivity"
             android:exported="false"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.AccountActivity"
             android:exported="false"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -44,16 +47,16 @@
             android:name=".activities.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.Untitled_Project_2.NoActionBar"
-            android:windowSoftInputMode="stateUnchanged|adjustResize"/>
+            android:windowSoftInputMode="stateUnchanged|adjustResize" />
         <activity
             android:name=".activities.Vaccines"
             android:exported="false"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
