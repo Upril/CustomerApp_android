@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if (result.getResultCode() == RESULT_CANCELED) {
                 Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
+                getDateRecycler();
             }
             //do something with data
         });
