@@ -19,9 +19,6 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="31">
         <activity
-            android:name=".MyVaccinesActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.AddSubActivity"
             android:exported="false"
             android:launchMode="singleTask"

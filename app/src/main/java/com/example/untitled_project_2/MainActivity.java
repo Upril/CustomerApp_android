@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.activities.AddSubActivity;
 import com.example.untitled_project_2.activities.LoginActivity;
 import com.example.untitled_project_2.activities.SettingsActivity;
 import com.example.untitled_project_2.activities.SubscriptionActivity;
@@ -114,13 +115,11 @@ public class MainActivity extends AppCompatActivity {
 
         //redirect to login page
         if(!loggedIn) {
+            //Intent intent = new Intent(this, AddSubActivity.class);
             Intent intent = new Intent(this,LoginActivity.class);
             Log.e("Intent",intent.toString());
             mActivityLauncher.launch(intent);
         }
-
-
-
 
     }
     @Override

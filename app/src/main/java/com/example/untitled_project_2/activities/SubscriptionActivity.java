@@ -35,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SubscriptionActivity extends AppCompatActivity {
 
@@ -93,8 +95,10 @@ public class SubscriptionActivity extends AppCompatActivity {
                 }
             }
             if (result.getResultCode() == RESULT_CANCELED) {
-                Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(getIntent());
             }
+
         });
         menuActivityLauncher = new MenuActivityLauncher(SubscriptionActivity.this,mActivityLauncher,token);
         menuActivityLauncher.init(navigationView,drawerLayout);
@@ -102,6 +106,18 @@ public class SubscriptionActivity extends AppCompatActivity {
         //ssl disable
         ssl.SSlDisable();
 
+        requestSubs();
+
+        Button addSubButton = findViewById(R.id.AddSubsButton);
+        addSubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuActivityLauncher.startActivity(AddSubActivity.class);
+            }
+        });
+
+    }
+    private void requestSubs(){
         //request user subs
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "https://10.0.2.2:7277/api/subscriptions/byUser/"+userId+"/";
@@ -132,32 +148,20 @@ public class SubscriptionActivity extends AppCompatActivity {
                             rvSubs.getRecycledViewPool().setMaxRecycledViews(0, response.length());
                             rvSubs.setItemViewCacheSize(response.length());
 
-                            SubscriptionAdapter subAdapter = new SubscriptionAdapter(SubscriptionActivity.this, cities, vaccines, subIds, length);
+                            SubscriptionAdapter subAdapter = new SubscriptionAdapter(SubscriptionActivity.this, cities, vaccines, subIds, length, token);
                             rvSubs.setAdapter(subAdapter);
                             rvSubs.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-
                         }
                     }
-                }, new Response.ErrorListener() {
+                }, error -> Log.i("Error",error.toString())){
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Error",error.toString());
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
-        });
+        };
         queue.add(arrayRequest);
-
-        Button addSubButton = findViewById(R.id.AddSubsButton);
-        addSubButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(SubscriptionActivity.this, AddSubActivity.class);
-                SubscriptionActivity.this.startActivity(myIntent);
-            }
-        });
-
-
-
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
