@@ -58,6 +58,16 @@ public class MyVaccinesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_vaccines);
 
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
+        //wydobadz userid z tokena
+        try {
+            String[] data = JWTUtils.decode(token);
+            userId = Integer.parseInt(data[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //init menu
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
@@ -72,17 +82,6 @@ public class MyVaccinesActivity extends AppCompatActivity {
         //ssl disable
         ssl.SSlDisable();
 
-
-        Intent intent = getIntent();
-        token = intent.getStringExtra("token");
-        //wydobadz userid z tokena
-        try {
-            String[] data = JWTUtils.decode(token);
-            userId = Integer.parseInt(data[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         getVaccinesRecycler();
 
 
@@ -93,6 +92,7 @@ public class MyVaccinesActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.e("Response",response.toString());
                         if (response != null && response.length() > 0){
                             for (int i = 0; i<response.length();i++){
                                 try{
@@ -122,7 +122,7 @@ public class MyVaccinesActivity extends AppCompatActivity {
                                 }
                             }
 
-                            RecyclerView rvVaccinations = findViewById(R.id.rvVaccines);
+                            RecyclerView rvVaccinations = findViewById(R.id.myVaccinesListRv);
                             //set do długości response
                             rvVaccinations.getRecycledViewPool().setMaxRecycledViews(0,15);
                             rvVaccinations.setItemViewCacheSize(15);

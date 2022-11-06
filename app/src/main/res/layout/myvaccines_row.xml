@@ -46,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="facilityAddress"
-        app:layout_constraintBaseline_toBaselineOf="@+id/facilityName"
-        app:layout_constraintStart_toEndOf="@+id/facilityName" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/myFacilityName"
+        app:layout_constraintStart_toEndOf="@+id/myFacilityName" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/myVaccineButton"
