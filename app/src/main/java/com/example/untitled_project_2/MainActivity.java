@@ -14,7 +14,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -46,6 +49,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -56,6 +61,15 @@ public class MainActivity extends AppCompatActivity {
     String token;
     SSLRules ssl = new SSLRules();
     ArrayList<Vaccine> vaccines = new ArrayList<>();
+    private ArrayList<String> citiesArray;
+    private ArrayList<String> vaccinesArray;
+    private String VaccineUrl = "https://10.0.2.2:7277/api/vaccine/all/";
+    private String CityUrl = "https://10.0.2.2:7277/api/account/getAllCities/";
+    private Spinner citySpinner;
+    private Spinner vaccineSpinner;
+    private Integer citySelected;
+    private Integer vaccineSelected;
+
 
     public static ActivityResultLauncher<Intent> mActivityLauncher;
 
@@ -171,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
 
-
+                            dataInit();
 
                             RecyclerView rvVaccines = findViewById(R.id.rvVaccines);
                             //set do długości response
@@ -189,6 +203,113 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(arrayRequest);
+    }
+    private void dataInit(){
+        setVaccinesArray();
+    }
+    private void setVaccinesArray(){
+        //get Vaccines
+        vaccinesArray = new ArrayList<String>();
+        RequestQueue queue1 = Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest arrayRequest1 = new JsonArrayRequest(Request.Method.GET, VaccineUrl,null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response != null && response.length() > 0){
+                            for(int i = 0; i<response.length();i++){
+                                try {
+                                    JSONObject sub = response.getJSONObject(i);
+                                    vaccinesArray.add(sub.getString("Name"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        setCitiesArray();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Error",error.toString());
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue1.add(arrayRequest1);
+    }
+    private void setCitiesArray(){
+        //get cities
+        citiesArray = new ArrayList<String>();
+        RequestQueue queue2 = Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest arrayRequest2 = new JsonArrayRequest(Request.Method.GET, CityUrl,null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response != null && response.length() > 0){
+                            for(int i = 0; i<response.length();i++){
+                                try {
+                                    JSONObject sub = response.getJSONObject(i);
+                                    citiesArray.add(sub.getString("Name"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        spinnerInit();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Error",error.toString());
+            }
+        });
+        queue2.add(arrayRequest2);
+    }
+    private void spinnerInit(){
+        vaccineSpinner = findViewById(R.id.vaccinationVaccineSpinner);
+        citySpinner = findViewById(R.id.vaccinationCitySpinner);
+
+        ArrayAdapter<String> adapterVaccine = new ArrayAdapter<String>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, vaccinesArray);
+        ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,citiesArray);
+
+        vaccineSpinner.setAdapter(adapterVaccine);
+        citySpinner.setAdapter(adapterCity);
+
+        vaccineSpinner.setSelection(0);
+        citySpinner.setSelection(0);
+        vaccineSelected = vaccineSpinner.getSelectedItemPosition();
+        citySelected = citySpinner.getSelectedItemPosition();
+
+        vaccineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                vaccineSelected = vaccineSpinner.getSelectedItemPosition();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                citySelected = citySpinner.getSelectedItemPosition();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+    public void getDatesByCity(){
+
     }
 
 }

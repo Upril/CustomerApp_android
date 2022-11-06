@@ -50,6 +50,10 @@
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
+            android:name=".activities.MyVaccinesActivity"
+            android:exported="false"
+            android:launchMode="singleTask"/>
+        <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"

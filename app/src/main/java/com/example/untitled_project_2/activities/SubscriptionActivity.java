@@ -41,7 +41,6 @@ import java.util.Map;
 public class SubscriptionActivity extends AppCompatActivity {
 
     private final SSLRules ssl = new SSLRules();
-    //decode JWT
     private Integer userId;
     private ArrayList<String> cities;
     private ArrayList<String> vaccines;
