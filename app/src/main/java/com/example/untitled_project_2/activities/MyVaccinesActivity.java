@@ -78,7 +78,6 @@ public class MyVaccinesActivity extends AppCompatActivity {
 
         //ssl disable
         ssl.SSlDisable();
-
         getVaccinesRecycler();
 
 
