@@ -53,7 +53,7 @@ public class MyVaccinesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_vaccines);
-
+        setTitle("Twoje Terminy Szczepień");
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
         //wydobadz userid z tokena
@@ -113,6 +113,8 @@ public class MyVaccinesActivity extends AppCompatActivity {
 
                                 JSONObject vaccine = appointmentJson.getJSONObject("Vaccine");
                                 appointmentObject.setVaccineName(vaccine.getString("Name"));
+
+                                appointmentObject.setVacStatus(appointmentJson.getInt("VaccinationStatusId"));
 
                                 vaccines.add(appointmentObject);
 

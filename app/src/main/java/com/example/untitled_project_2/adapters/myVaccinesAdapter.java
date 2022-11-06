@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -31,11 +32,11 @@ public class myVaccinesAdapter extends RecyclerView.Adapter<myVaccinesAdapter.my
     private final String token;
     private String[] data;
 
-    public myVaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1, String token1){
+    public myVaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1, String token1) {
         mActivity = activity;
-        vaccines=vaccines1;
-        length=length1;
-        token=token1;
+        vaccines = vaccines1;
+        length = length1;
+        token = token1;
         try {
             data = JWTUtils.decode(token);
         } catch (Exception e) {
@@ -43,13 +44,15 @@ public class myVaccinesAdapter extends RecyclerView.Adapter<myVaccinesAdapter.my
         }
 
     }
+
     //launches when we create Recyclerview
     @NonNull
     @Override
     public myVaccinesAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rowRootview = mActivity.getLayoutInflater().inflate(R.layout.myvaccines_row,parent,false);
+        View rowRootview = mActivity.getLayoutInflater().inflate(R.layout.myvaccines_row, parent, false);
         return new myVaccinesAdapterViewHolder(rowRootview);
     }
+
     //launches when we need to create new row
     @Override
     public void onBindViewHolder(@NonNull myVaccinesAdapterViewHolder holder, int position) {
@@ -63,6 +66,13 @@ public class myVaccinesAdapter extends RecyclerView.Adapter<myVaccinesAdapter.my
         holder.medicalFacility.setText(vaccine.getFacilityName());
         holder.facilityAddress.setText(vaccine.getAddress());
 
+        if (vaccine.getVacStatus() == 1 || vaccine.getVacStatus() == 3) {
+            holder.rowLayout.setBackgroundResource(R.drawable.myvac_bad_row_style);
+        } else {
+            holder.rowLayout.setBackgroundResource(R.drawable.myvac_good_row_style);
+            holder.signupButton.setVisibility(View.GONE);
+        }
+
         holder.isBinding = false;
 
     }
@@ -75,6 +85,7 @@ public class myVaccinesAdapter extends RecyclerView.Adapter<myVaccinesAdapter.my
     //view holder zarządza pojedynczym wierszem listy
     //to dobre miejsce na zaimplementowanie słuchaczy
     class myVaccinesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, TextWatcher {
+        public ConstraintLayout rowLayout;
         public TextView medicalFacility;
         public TextView vaccineName;
         public TextView vaccineDate;
@@ -84,16 +95,18 @@ public class myVaccinesAdapter extends RecyclerView.Adapter<myVaccinesAdapter.my
 
         public myVaccinesAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
+            rowLayout = itemView.findViewById(R.id.myvacrow);
             medicalFacility = itemView.findViewById(R.id.myFacilityName);
             facilityAddress = itemView.findViewById(R.id.myFacilityAddress);
             vaccineName = itemView.findViewById(R.id.myVaccineName);
             vaccineDate = itemView.findViewById(R.id.myVaccineDate);
             signupButton = itemView.findViewById(R.id.myVaccineButton);
+
             signupButton.setOnClickListener(view -> {
                 if (!isBinding) {
                     RequestQueue queue1 = Volley.newRequestQueue(mActivity.getApplicationContext());
-                    StringRequest stringRequest = new StringRequest(Request.Method.PUT,"https://10.0.2.2:7277/api/vaccination/unassignUserFromDate?dateId="+signupButton.getTag()+"&userId="+data[0], response -> {
-                        Log.e("Vaccination","Removed");
+                    StringRequest stringRequest = new StringRequest(Request.Method.PUT, "https://10.0.2.2:7277/api/vaccination/unassignUserFromDate?dateId=" + signupButton.getTag() + "&userId=" + data[0], response -> {
+                        Log.e("Vaccination", "Removed");
                         mActivity.finish();
                         mActivity.startActivity(mActivity.getIntent());
                         Toast.makeText(mActivity.getApplicationContext(), "Anulowano termin!", Toast.LENGTH_LONG).show();
