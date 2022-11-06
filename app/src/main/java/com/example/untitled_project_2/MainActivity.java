@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,11 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.untitled_project_2.R;
-import com.example.untitled_project_2.activities.AddSubActivity;
 import com.example.untitled_project_2.activities.LoginActivity;
-import com.example.untitled_project_2.activities.SettingsActivity;
-import com.example.untitled_project_2.activities.SubscriptionActivity;
 import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.adapters.Vaccine;
 import com.example.untitled_project_2.adapters.VaccinesAdapter;
@@ -44,7 +38,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,10 +58,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> vaccinesArray;
     private String VaccineUrl = "https://10.0.2.2:7277/api/vaccine/all/";
     private String CityUrl = "https://10.0.2.2:7277/api/account/getAllCities/";
+    private String VaccinationUrl = "https://10.0.2.2:7277/api/vaccination/getAllFreeDates/";
     private Spinner citySpinner;
     private Spinner vaccineSpinner;
+    private Button clearFilterButton;
     private Integer citySelected;
     private Integer vaccineSelected;
+    private RecyclerView rvVaccines;
+    private VaccinesAdapter vaccinesAdapter;
 
 
     public static ActivityResultLauncher<Intent> mActivityLauncher;
@@ -78,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Dostępne Terminy Szczepień");
-
 
         //init menu
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -116,13 +112,13 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        getDateRecycler();
+                        getDateRecycler(VaccinationUrl);
                         break;
                 }
             }
             if (result.getResultCode() == RESULT_CANCELED) {
                 Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
-                getDateRecycler();
+                getDateRecycler(VaccinationUrl);
             }
             //do something with data
         });
@@ -134,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Intent",intent.toString());
             mActivityLauncher.launch(intent);
         }
+
+
 
     }
     @Override
@@ -149,9 +147,8 @@ public class MainActivity extends AppCompatActivity {
         outstate.putBoolean("loggedIn",loggedIn);
         super.onSaveInstanceState(outstate);
     }
-    public void getDateRecycler(){
+    public void getDateRecycler(String url){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        String url = "https://10.0.2.2:7277/api/vaccination/getAllFreeDates/";
         JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -187,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
 
                             dataInit();
 
-                            RecyclerView rvVaccines = findViewById(R.id.rvVaccines);
+                            rvVaccines = findViewById(R.id.rvVaccines);
                             //set do długości response
                             rvVaccines.getRecycledViewPool().setMaxRecycledViews(0,15);
                             rvVaccines.setItemViewCacheSize(15);
-                            VaccinesAdapter vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length(), token);
+                            vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length(), token);
                             rvVaccines.setAdapter(vaccinesAdapter);
                             rvVaccines.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         }
@@ -260,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        spinnerInit();
+                        ControlsInit();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -270,9 +267,11 @@ public class MainActivity extends AppCompatActivity {
         });
         queue2.add(arrayRequest2);
     }
-    private void spinnerInit(){
+    private void ControlsInit(){
         vaccineSpinner = findViewById(R.id.vaccinationVaccineSpinner);
         citySpinner = findViewById(R.id.vaccinationCitySpinner);
+        clearFilterButton = findViewById(R.id.ClearFiltersButton);
+
 
         ArrayAdapter<String> adapterVaccine = new ArrayAdapter<String>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, vaccinesArray);
         ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,citiesArray);
@@ -289,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 vaccineSelected = vaccineSpinner.getSelectedItemPosition();
+                updateRecycler("https://10.0.2.2:7277/api/vaccination/getAllFreeDatesByVaccine?vaccineId="+vaccineSelected);
             }
 
             @Override
@@ -300,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 citySelected = citySpinner.getSelectedItemPosition();
+                updateRecycler("https://10.0.2.2:7277/api/vaccination/getAllFreeDatesByCity?cityId="+citySelected);
             }
 
             @Override
@@ -307,9 +308,57 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        clearFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateRecycler(VaccinationUrl);
+            }
+        });
     }
-    public void getDatesByCity(){
+    private void updateRecycler(String url){
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if (response != null && response.length() > 0){
+                            vaccines.clear();
+                            for (int i = 0; i<response.length();i++){
+                                try{
+                                    Vaccine appointmentObject = new Vaccine();
+                                    JSONObject appointmentJson = response.getJSONObject(i);
+                                    appointmentObject.setId(appointmentJson.getString("Id"));
 
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                                    SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    Date d = sdf.parse(appointmentJson.getString("Date"));
+                                    appointmentObject.setDate(output.format(d));
+
+                                    JSONObject facility = appointmentJson.getJSONObject("MedicalFacility");
+                                    appointmentObject.setFacilityName(facility.getString("Name"));
+
+                                    JSONObject address = facility.getJSONObject("Address");
+                                    JSONObject addressCity = address.getJSONObject("City");
+                                    appointmentObject.setAddress(address.getString("StreetName")+" "+address.getString("BuildingNumber")+", "+addressCity.getString("Name"));
+
+                                    JSONObject vaccine = appointmentJson.getJSONObject("Vaccine");
+                                    appointmentObject.setVaccineName(vaccine.getString("Name"));
+
+                                    vaccines.add(appointmentObject);
+
+                                } catch (JSONException | ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        vaccinesAdapter.notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyError",error.toString());
+            }
+        });
+        requestQueue.add(arrayRequest);
     }
-
 }
