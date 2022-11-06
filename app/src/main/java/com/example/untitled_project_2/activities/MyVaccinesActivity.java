@@ -114,6 +114,8 @@ public class MyVaccinesActivity extends AppCompatActivity {
                                 JSONObject vaccine = appointmentJson.getJSONObject("Vaccine");
                                 appointmentObject.setVaccineName(vaccine.getString("Name"));
 
+                                appointmentObject.setVacStatus(appointmentJson.getInt("VaccinationStatusId"));
+
                                 vaccines.add(appointmentObject);
 
                             } catch (JSONException | ParseException e) {

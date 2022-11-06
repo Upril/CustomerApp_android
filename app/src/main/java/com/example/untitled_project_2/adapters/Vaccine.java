@@ -6,6 +6,7 @@ public class Vaccine {
     private String FacilityName;
     private String Address;
     private String Date;
+    private Integer VacStatus;
 
     public String getVaccineName() {
         return VaccineName;
@@ -45,5 +46,13 @@ public class Vaccine {
 
     public void setId(String id) {
         Id = id;
+    }
+
+    public Integer getVacStatus() {
+        return VacStatus;
+    }
+
+    public void setVacStatus(Integer vacStatus) {
+        VacStatus = vacStatus;
     }
 }
