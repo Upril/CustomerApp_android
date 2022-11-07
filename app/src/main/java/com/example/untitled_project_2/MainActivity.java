@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -279,16 +280,17 @@ public class MainActivity extends AppCompatActivity {
         vaccineSpinner.setAdapter(adapterVaccine);
         citySpinner.setAdapter(adapterCity);
 
-        vaccineSpinner.setSelection(0);
-        citySpinner.setSelection(0);
-        vaccineSelected = vaccineSpinner.getSelectedItemPosition();
-        citySelected = citySpinner.getSelectedItemPosition();
+//        vaccineSpinner.setSelection(0);
+//        citySpinner.setSelection(0);
+//        vaccineSelected = vaccineSpinner.getSelectedItemPosition();
+//        citySelected = citySpinner.getSelectedItemPosition();
 
         vaccineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 vaccineSelected = vaccineSpinner.getSelectedItemPosition();
-                updateRecycler("https://10.0.2.2:7277/api/vaccination/getAllFreeDatesByVaccine?vaccineId="+vaccineSelected);
+                Log.e("Spinner","VacChanged");
+                updateRecycler("https://10.0.2.2:7277/api/vaccination/getAllFreeDatesByVaccine?vaccineId="+(vaccineSelected+1));
             }
 
             @Override
@@ -300,7 +302,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 citySelected = citySpinner.getSelectedItemPosition();
-                updateRecycler("https://10.0.2.2:7277/api/vaccination/getAllFreeDatesByCity?cityId="+citySelected);
+                Log.e("Spinner","CityChanged");
+                updateRecycler("https://10.0.2.2:7277/api/vaccination/getAllFreeDatesByCity?cityId="+(citySelected+1));
             }
 
             @Override
@@ -319,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
+                    @SuppressLint({"NotifyDataSetChanged","SimpleDateFormat"})
                     @Override
                     public void onResponse(JSONArray response) {
                         if (response != null && response.length() > 0){
@@ -332,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                                     SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                     Date d = sdf.parse(appointmentJson.getString("Date"));
+                                    assert d != null;
                                     appointmentObject.setDate(output.format(d));
 
                                     JSONObject facility = appointmentJson.getJSONObject("MedicalFacility");
@@ -339,7 +344,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     JSONObject address = facility.getJSONObject("Address");
                                     JSONObject addressCity = address.getJSONObject("City");
-                                    appointmentObject.setAddress(address.getString("StreetName")+" "+address.getString("BuildingNumber")+", "+addressCity.getString("Name"));
+                                    appointmentObject.setAddress(address.getString("StreetName")+
+                                            " "+address.getString("BuildingNumber")+", "+addressCity.getString("Name"));
 
                                     JSONObject vaccine = appointmentJson.getJSONObject("Vaccine");
                                     appointmentObject.setVaccineName(vaccine.getString("Name"));
@@ -351,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         }
+                        vaccinesAdapter.setItemCount(vaccines.size());
                         vaccinesAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {

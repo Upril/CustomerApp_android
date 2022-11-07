@@ -1,14 +1,6 @@
 package com.example.untitled_project_2.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,24 +8,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
-import com.example.untitled_project_2.adapters.MenuActivityLauncher;
-import com.example.untitled_project_2.adapters.SubscriptionAdapter;
 import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
-import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,11 +30,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddSubActivity extends AppCompatActivity {
-    private SSLRules ssl = new SSLRules();
+    private final SSLRules ssl = new SSLRules();
     private ArrayList<String> citiesArray;
     private ArrayList<String> vaccinesArray;
-    private String VaccineUrl = "https://10.0.2.2:7277/api/vaccine/all/";
-    private String CityUrl = "https://10.0.2.2:7277/api/account/getAllCities/";
+    private final String VaccineUrl = "https://10.0.2.2:7277/api/vaccine/all/";
+    private final String CityUrl = "https://10.0.2.2:7277/api/account/getAllCities/";
     private Spinner vaccineSpinner;
     private Spinner citySpinner;
     private Integer citySelected;
@@ -77,12 +64,7 @@ public class AddSubActivity extends AppCompatActivity {
 
         dataInit();
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendSub();
-            }
-        });
+        signupButton.setOnClickListener(view -> sendSub());
     }
 
 
@@ -91,30 +73,22 @@ public class AddSubActivity extends AppCompatActivity {
     }
     private void setVaccinesArray(){
         //get Vaccines
-        vaccinesArray = new ArrayList<String>();
+        vaccinesArray = new ArrayList<>();
         RequestQueue queue1 = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest arrayRequest1 = new JsonArrayRequest(Request.Method.GET, VaccineUrl,null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response != null && response.length() > 0){
-                            for(int i = 0; i<response.length();i++){
-                                try {
-                                    JSONObject sub = response.getJSONObject(i);
-                                    vaccinesArray.add(sub.getString("Name"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                response -> {
+                    if (response != null && response.length() > 0){
+                        for(int i = 0; i<response.length();i++){
+                            try {
+                                JSONObject sub = response.getJSONObject(i);
+                                vaccinesArray.add(sub.getString("Name"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
-                        setCitiesArray();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Error",error.toString());
-            }
-        }) {
+                    setCitiesArray();
+                }, error -> Log.i("Error",error.toString())) {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
@@ -126,38 +100,32 @@ public class AddSubActivity extends AppCompatActivity {
     }
     private void setCitiesArray(){
         //get cities
-        citiesArray = new ArrayList<String>();
+        citiesArray = new ArrayList<>();
         RequestQueue queue2 = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest arrayRequest2 = new JsonArrayRequest(Request.Method.GET, CityUrl,null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response != null && response.length() > 0){
-                            for(int i = 0; i<response.length();i++){
-                                try {
-                                    JSONObject sub = response.getJSONObject(i);
-                                    citiesArray.add(sub.getString("Name"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                response -> {
+                    if (response != null && response.length() > 0){
+                        for(int i = 0; i<response.length();i++){
+                            try {
+                                JSONObject sub = response.getJSONObject(i);
+                                citiesArray.add(sub.getString("Name"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
-                        spinnerInit();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Error",error.toString());
-            }
-        });
+                    spinnerInit();
+                }, error -> Log.i("Error",error.toString()));
         queue2.add(arrayRequest2);
     }
     private void spinnerInit(){
         vaccineSpinner = findViewById(R.id.vaccineSpinner);
         citySpinner = findViewById(R.id.CitySpinner);
 
-        ArrayAdapter<String> adapterVaccine = new ArrayAdapter<String>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, vaccinesArray);
-        ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,citiesArray);
+        ArrayAdapter<String> adapterVaccine = new ArrayAdapter<>(getApplicationContext(),
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, vaccinesArray);
+        ArrayAdapter<String> adapterCity = new ArrayAdapter<>(getApplicationContext(),
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, citiesArray);
 
         vaccineSpinner.setAdapter(adapterVaccine);
         citySpinner.setAdapter(adapterCity);

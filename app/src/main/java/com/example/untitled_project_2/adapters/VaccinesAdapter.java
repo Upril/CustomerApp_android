@@ -28,7 +28,7 @@ import java.util.Map;
 public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.VaccinesAdapterViewHolder> {
     private final Activity mActivity;
     private final ArrayList<Vaccine> vaccines;
-    private final Integer length;
+    private Integer length;
     private final String token;
     private String[] data;
 
@@ -73,6 +73,9 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
     public int getItemCount() {
         //zmien potem jak sie bedziesz laczy z baza
         return length;
+    }
+    public void setItemCount(int newLength){
+        length = newLength;
     }
 
     //view holder zarządza pojedynczym wierszem listy
