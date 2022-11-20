@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                         if (token == null){
                             vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length());
                         } else {
-                            vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length(), token);
+                            vaccinesAdapter = new VaccinesAdapter(MainActivity.this,menuActivityLauncher, vaccines, response.length(), token);
                         }
                         rvVaccines.setAdapter(vaccinesAdapter);
                         rvVaccines.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

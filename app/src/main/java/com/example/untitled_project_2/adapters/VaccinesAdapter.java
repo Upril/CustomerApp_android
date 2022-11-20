@@ -18,6 +18,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.untitled_project_2.R;
+import com.example.untitled_project_2.activities.MyVaccinesActivity;
 import com.example.untitled_project_2.networking.JWTUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -31,8 +32,9 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
     private Integer length;
     private String token;
     private String[] data;
+    private MenuActivityLauncher menuActivityLauncher;
 
-    public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1, String token1){
+    public VaccinesAdapter(Activity activity, MenuActivityLauncher menuActivityLauncher1, ArrayList<Vaccine> vaccines1, Integer length1, String token1){
         mActivity = activity;
         vaccines=vaccines1;
         length=length1;
@@ -42,6 +44,7 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
         } catch (Exception e) {
             e.printStackTrace();
         }
+        menuActivityLauncher = menuActivityLauncher1;
 
     }
     public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1){
@@ -113,7 +116,8 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
                         RequestQueue queue1 = Volley.newRequestQueue(mActivity.getApplicationContext());
                         StringRequest stringRequest = new StringRequest(Request.Method.PUT,"https://10.0.2.2:7277/api/vaccination/assignUserToDate?dateId="+signupButton.getTag()+"&userId="+data[0], response -> {
                             Log.e("Vaccination","Added");
-                            Toast.makeText(mActivity.getApplicationContext(), "Zapisano na termin nr."+signupButton.getTag(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity.getApplicationContext(), "Zapisano na termin", Toast.LENGTH_LONG).show();
+                            menuActivityLauncher.startActivity(MyVaccinesActivity.class);
 
                         }, error -> Log.i("Error", error.toString())) {
                             @Override
