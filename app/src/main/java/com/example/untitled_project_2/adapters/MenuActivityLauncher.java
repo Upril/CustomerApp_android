@@ -13,7 +13,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.untitled_project_2.MainActivity;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.activities.AccountActivity;
+import com.example.untitled_project_2.activities.LoginActivity;
 import com.example.untitled_project_2.activities.MyVaccinesActivity;
+import com.example.untitled_project_2.activities.RegisterActivity;
 import com.example.untitled_project_2.activities.SubscriptionActivity;
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,8 +33,8 @@ public class MenuActivityLauncher {
         mActivityLauncher = activityResultLauncher;
     }
     public void init(NavigationView navigationView, DrawerLayout drawerLayout){
+        Menu menu = navigationView.getMenu();
         if (mToken == null) {
-            Menu menu = navigationView.getMenu();
             menu.findItem(R.id.menuSubscriptions).setVisible(false);
             menu.findItem(R.id.menuMyVaccines).setVisible(false);
             menu.findItem(R.id.menuHome).setVisible(false);
@@ -40,34 +42,47 @@ public class MenuActivityLauncher {
 
             menu.findItem(R.id.menuNoUserLogin).setVisible(true);
             menu.findItem(R.id.menuNoUserRegister).setVisible(true);
+        } else {
+            menu.findItem(R.id.menuSubscriptions).setVisible(true);
+            menu.findItem(R.id.menuMyVaccines).setVisible(true);
+            menu.findItem(R.id.menuHome).setVisible(true);
+            menu.setGroupVisible(R.id.menuAccountGroup, true);
+
+            menu.findItem(R.id.menuNoUserLogin).setVisible(false);
+            menu.findItem(R.id.menuNoUserRegister).setVisible(false);
         }
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menuAccount:
                     Log.i("Account clicked", "Account was clicked");
                     startActivity(AccountActivity.class);
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.menuSubscriptions:
                     Log.i("Vaccines clicked", "Vaccines was clicked");
                     startActivity(SubscriptionActivity.class);
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.menuMyVaccines:
                     Log.i("MyVaccines clicked", "MyVaccines was clicked");
                     startActivity(MyVaccinesActivity.class);
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.menuLogout:
                     Log.i("Logout clicked", "Logout was clicked");
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                    logout();
                     break;
                 case R.id.menuHome:
                     Log.i("Home clicked", "Home was clicked");
                     returnHome();
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                    break;
+                case R.id.menuNoUserLogin:
+                    Log.i("Login clicked", "Login was clicked");
+                    startActivity(LoginActivity.class);
+                    break;
+                case R.id.menuNoUserRegister:
+                    Log.i("Register clicked", "Register was clicked");
+                    startActivity(RegisterActivity.class);
                     break;
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
 
             return false;
         });
@@ -83,6 +98,11 @@ public class MenuActivityLauncher {
         Bundle bundle = new Bundle(2);
         bundle.putString("token",mToken);
         bundle.putString("ActivityResult","loginOK");
+        intent.putExtras(bundle);
         mContext.startActivity(intent);
+    }
+    public void logout() {
+        mToken = null;
+        startActivity(LoginActivity.class);
     }
 }

@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     token = bundle.getString("token");
                     loggedIn = true;
                     menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher, token);
+                    menuActivityLauncher.init(navigationView,drawerLayout);
                     Log.i("Main JWT", "Received");
                     try {
                         String[] data = JWTUtils.decode(token);
@@ -107,15 +108,14 @@ public class MainActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    getDateRecycler(VaccinationUrl);
                 }
                 else if ("noLogin".equals(resultString)){
+                    token = null;
                     menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher);
                     menuActivityLauncher.init(navigationView, drawerLayout);
                 }
 
             }
-            menuActivityLauncher.init(navigationView, drawerLayout);
             getDateRecycler(VaccinationUrl);
         });
 
