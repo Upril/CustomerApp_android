@@ -54,11 +54,6 @@
             android:exported="false"
             android:launchMode="singleTask"/>
         <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings"
-            android:launchMode="singleTask" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask">

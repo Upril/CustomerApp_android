@@ -112,10 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (result.getResultCode() == RESULT_CANCELED) {
-                Toast.makeText(this, "Anulowano", Toast.LENGTH_SHORT).show();
                 getDateRecycler(VaccinationUrl);
             }
-            //do something with data
         });
 
         //redirect to login page

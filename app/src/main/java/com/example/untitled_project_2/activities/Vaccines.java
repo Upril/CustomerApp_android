@@ -89,11 +89,6 @@ public class Vaccines extends AppCompatActivity {
                         Log.i("MyVaccines clicked","MyVaccines was clicked");
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
-                    case R.id.menuSettings:
-                        Log.i("Settings clicked","Settings was clicked");
-                        //startSettings();
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
                     case R.id.menuLogout:
                         Log.i("Logout clicked","Logout was clicked");
                         drawerLayout.closeDrawer(GravityCompat.START);

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -15,21 +13,25 @@ import com.example.untitled_project_2.MainActivity;
 import com.example.untitled_project_2.R;
 import com.example.untitled_project_2.activities.AccountActivity;
 import com.example.untitled_project_2.activities.MyVaccinesActivity;
-import com.example.untitled_project_2.activities.SettingsActivity;
 import com.example.untitled_project_2.activities.SubscriptionActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class MenuActivityLauncher {
     private final Context mContext;
     private final ActivityResultLauncher mActivityLauncher;
-    private final String mToken;
+    private String mToken;
     public MenuActivityLauncher(Context context, ActivityResultLauncher activityResultLauncher, String token){
         mContext = context;
         mActivityLauncher = activityResultLauncher;
         mToken = token;
     }
+    public MenuActivityLauncher(Context context, ActivityResultLauncher activityResultLauncher){
+        mContext = context;
+        mActivityLauncher = activityResultLauncher;
+    }
     public void init(NavigationView navigationView, DrawerLayout drawerLayout){
         navigationView.setNavigationItemSelectedListener(item -> {
+
             switch (item.getItemId()) {
                 case R.id.menuAccount:
                     Log.i("Account clicked", "Account was clicked");
@@ -44,11 +46,6 @@ public class MenuActivityLauncher {
                 case R.id.menuMyVaccines:
                     Log.i("MyVaccines clicked", "MyVaccines was clicked");
                     startActivity(MyVaccinesActivity.class);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    break;
-                case R.id.menuSettings:
-                    Log.i("Settings clicked", "Settings was clicked");
-                    startActivity(SettingsActivity.class);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     break;
                 case R.id.menuLogout:

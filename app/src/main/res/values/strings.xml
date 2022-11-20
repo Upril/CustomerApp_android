@@ -37,4 +37,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="zaktualizuj_dane">Zaktualizuj Dane</string>
+    <string name="account">Profil</string>
+    <string name="subscriptions">Subskrypcje</string>
+    <string name="home">Strona główna</string>
+    <string name="myvaccines">Moje Sczepienia</string>
+    <string name="functions">Konto</string>
 </resources>
