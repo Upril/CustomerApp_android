@@ -42,4 +42,12 @@
     <string name="home">Strona główna</string>
     <string name="myvaccines">Moje Sczepienia</string>
     <string name="functions">Konto</string>
+    <string name="kontynuuj_bez_logowania">Kontynuuj Bez Logowania</string>
+    <string name="register">Rejestracja</string>
+    <string name="login">Zaloguj</string>
+    <string name="password">Hasło</string>
+    <string name="email">Email</string>
+    <string name="loginLogo">Login</string>
+    <string name="zaloguj_si">Zaloguj się</string>
+    <string name="zarejestruj_si">Zarejestruj się</string>
 </resources>

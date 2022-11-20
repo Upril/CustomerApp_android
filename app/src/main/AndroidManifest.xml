@@ -46,10 +46,6 @@
             android:theme="@style/Theme.Untitled_Project_2.NoActionBar"
             android:windowSoftInputMode="stateUnchanged|adjustResize" />
         <activity
-            android:name=".activities.Vaccines"
-            android:exported="false"
-            android:launchMode="singleTask" />
-        <activity
             android:name=".activities.MyVaccinesActivity"
             android:exported="false"
             android:launchMode="singleTask"/>

@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private final SSLRules ssl = new SSLRules();
     private EditText EmailText;
     private EditText PasswordText;
+    private TextView continueText;
     private Boolean emailValid = false, passwordValid = false;
     private final String URLline = "https://10.0.2.2:7277/api/account/login/";
 
@@ -44,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         EmailText = findViewById(R.id.LoginEmail);
         PasswordText = findViewById(R.id.TextPassword);
+
         Button loginButton = findViewById(R.id.LoginButton);
         Button gotoRegisterButton = findViewById(R.id.GotoRegisterButton);
         String regexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
@@ -93,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Niepoprawny Email lub haslo", Toast.LENGTH_LONG).show();
             }
         });
+
         gotoRegisterButton.setOnClickListener(view -> {
             Intent myIntent = new Intent(LoginActivity.this, RegisterActivity.class);
             LoginActivity.this.startActivity(myIntent);
@@ -141,6 +146,14 @@ public class LoginActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    public void noLogin(View v){
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle(1);
+        bundle.putString("ActivityResult", "noLogin");
+        intent.putExtras(bundle);
+        setResult(RESULT_FIRST_USER, intent);
+        finish();
     }
 }
 

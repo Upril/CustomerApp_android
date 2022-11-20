@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menuNoUserLogin"
+            android:icon="@drawable/ic_account"
+            android:title="@string/zaloguj_si"
+            android:visible="false"/>
+        <item
+            android:id="@+id/menuNoUserRegister"
+            android:icon="@drawable/ic_register"
+            android:title="@string/zarejestruj_si"
+            android:visible="false"/>
         <item
             android:id="@+id/menuSubscriptions"
             android:icon="@drawable/ic_vaccines"
@@ -15,7 +24,8 @@
             android:icon="@drawable/ic_myvaccines"
             android:title="@string/myvaccines" />
     </group>
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/menuAccountGroup">
         <item android:title="@string/functions">
             <menu>
                 <group>

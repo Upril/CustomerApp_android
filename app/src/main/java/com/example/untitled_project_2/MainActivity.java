@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                     token = bundle.getString("token");
                     loggedIn = true;
                     menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher, token);
-                    menuActivityLauncher.init(navigationView, drawerLayout);
                     Log.i("Main JWT", "Received");
                     try {
                         String[] data = JWTUtils.decode(token);
@@ -110,10 +109,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                     getDateRecycler(VaccinationUrl);
                 }
+                else if ("noLogin".equals(resultString)){
+                    menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher);
+                    menuActivityLauncher.init(navigationView, drawerLayout);
+                }
+
             }
-            if (result.getResultCode() == RESULT_CANCELED) {
-                getDateRecycler(VaccinationUrl);
-            }
+            menuActivityLauncher.init(navigationView, drawerLayout);
+            getDateRecycler(VaccinationUrl);
         });
 
         //redirect to login page
@@ -180,7 +183,11 @@ public class MainActivity extends AppCompatActivity {
                         //set do długości response
                         rvVaccines.getRecycledViewPool().setMaxRecycledViews(0,15);
                         rvVaccines.setItemViewCacheSize(15);
-                        vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length(), token);
+                        if (token == null){
+                            vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length());
+                        } else {
+                            vaccinesAdapter = new VaccinesAdapter(MainActivity.this, vaccines, response.length(), token);
+                        }
                         rvVaccines.setAdapter(vaccinesAdapter);
                         rvVaccines.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     }

@@ -29,7 +29,7 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
     private final Activity mActivity;
     private final ArrayList<Vaccine> vaccines;
     private Integer length;
-    private final String token;
+    private String token;
     private String[] data;
 
     public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1, String token1){
@@ -43,6 +43,11 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
             e.printStackTrace();
         }
 
+    }
+    public VaccinesAdapter(Activity activity, ArrayList<Vaccine> vaccines1, Integer length1){
+        mActivity = activity;
+        vaccines=vaccines1;
+        length=length1;
     }
     //launches when we create Recyclerview
     @NonNull
@@ -95,6 +100,12 @@ public class VaccinesAdapter extends RecyclerView.Adapter<VaccinesAdapter.Vaccin
             vaccineName = (TextView) itemView.findViewById(R.id.vaccineName);
             vaccineDate = (TextView) itemView.findViewById(R.id.vaccineDate);
             signupButton = (Button) itemView.findViewById(R.id.vaccineButton);
+
+            if (token == null)
+            {
+                signupButton.setVisibility(View.INVISIBLE);
+            }
+
             signupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.view.GravityCompat;
@@ -30,8 +31,17 @@ public class MenuActivityLauncher {
         mActivityLauncher = activityResultLauncher;
     }
     public void init(NavigationView navigationView, DrawerLayout drawerLayout){
-        navigationView.setNavigationItemSelectedListener(item -> {
+        if (mToken == null) {
+            Menu menu = navigationView.getMenu();
+            menu.findItem(R.id.menuSubscriptions).setVisible(false);
+            menu.findItem(R.id.menuMyVaccines).setVisible(false);
+            menu.findItem(R.id.menuHome).setVisible(false);
+            menu.setGroupVisible(R.id.menuAccountGroup, false);
 
+            menu.findItem(R.id.menuNoUserLogin).setVisible(true);
+            menu.findItem(R.id.menuNoUserRegister).setVisible(true);
+        }
+        navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menuAccount:
                     Log.i("Account clicked", "Account was clicked");
