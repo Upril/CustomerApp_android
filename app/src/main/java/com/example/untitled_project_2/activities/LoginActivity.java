@@ -1,5 +1,7 @@
 package com.example.untitled_project_2.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,8 +22,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.untitled_project_2.MainActivity;
 import com.example.untitled_project_2.R;
 
+import com.example.untitled_project_2.adapters.MenuActivityLauncher;
 import com.example.untitled_project_2.networking.SSLRules;
 
 import org.json.JSONException;
@@ -39,7 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView continueText;
     private Boolean emailValid = false, passwordValid = false;
     private final String URLline = "https://10.0.2.2:7277/api/account/login/";
-
+    public static ActivityResultLauncher<Intent> mActivityLauncher;
+    public static MenuActivityLauncher menuActivityLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
 
         //ssl disable
         ssl.SSlDisable();
+
+        mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
+        menuActivityLauncher = new MenuActivityLauncher(LoginActivity.this, mActivityLauncher);
 
         EmailText.setOnFocusChangeListener((view, b) -> {
             if (!b) {
@@ -108,10 +116,10 @@ public class LoginActivity extends AppCompatActivity {
         Bundle bundle = new Bundle(2);
         bundle.putString("token", JWT);
         bundle.putString("ActivityResult", "loginOK");
-        Intent intent = new Intent();
+        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
-        finish();
+        mActivityLauncher.launch(intent);
     }
     private void login(){
         try {
@@ -148,12 +156,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void noLogin(View v){
-        Intent intent = new Intent();
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         Bundle bundle = new Bundle(1);
         bundle.putString("ActivityResult", "noLogin");
         intent.putExtras(bundle);
         setResult(RESULT_FIRST_USER, intent);
-        finish();
+        mActivityLauncher.launch(intent);
     }
 }
 

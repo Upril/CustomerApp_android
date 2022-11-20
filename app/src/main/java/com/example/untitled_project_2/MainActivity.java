@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     MenuActivityLauncher menuActivityLauncher;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    Boolean loggedIn = false;
+    Boolean wentThroughLogin = false;
     String token;
     SSLRules ssl = new SSLRules();
     ArrayList<Vaccine> vaccines = new ArrayList<>();
@@ -83,44 +82,45 @@ public class MainActivity extends AppCompatActivity {
 
         //Activity recovery
         if(savedInstanceState != null && savedInstanceState.containsKey("loggedIn")) {
-            loggedIn = savedInstanceState.getBoolean("loggedIn");
+            wentThroughLogin = savedInstanceState.getBoolean("loggedIn");
             token = savedInstanceState.getString("token");
         }
 
         //ssl disable
         ssl.SSlDisable();
 
-        //if i need to resppond to results
-        mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getData() != null) {
-                Bundle bundle = result.getData().getExtras();
-                //zmien na string w values
-                String resultString = bundle.getString("ActivityResult");
-                if ("loginOK".equals(resultString)) {
-                    token = bundle.getString("token");
-                    loggedIn = true;
-                    menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher, token);
-                    menuActivityLauncher.init(navigationView,drawerLayout);
-                    Log.i("Main JWT", "Received");
-                    try {
-                        String[] data = JWTUtils.decode(token);
-                        Log.e("Data from decode", data[0]);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        Intent intent1 = getIntent();
+        Bundle ex = intent1.getExtras();
+        if (ex != null)
+        {
+            String res = ex.getString("ActivityResult");
+            if ("noLogin".equals(res)) {
+                wentThroughLogin = true;
+                token = null;
+                menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher);
+                menuActivityLauncher.init(navigationView, drawerLayout);
+                getDateRecycler(VaccinationUrl);
+            } else if("loginOK".equals(res)){
+                token = ex.getString("token");
+                wentThroughLogin = true;
+                menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher, token);
+                menuActivityLauncher.init(navigationView,drawerLayout);
+                Log.i("Main JWT", "Received");
+                try {
+                    String[] data = JWTUtils.decode(token);
+                    Log.e("Data from decode", data[0]);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                else if ("noLogin".equals(resultString)){
-                    token = null;
-                    menuActivityLauncher = new MenuActivityLauncher(MainActivity.this, mActivityLauncher);
-                    menuActivityLauncher.init(navigationView, drawerLayout);
-                }
-
+                getDateRecycler(VaccinationUrl);
             }
-            getDateRecycler(VaccinationUrl);
-        });
+        }
+
+        //if i need to resppond to results
+        mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
 
         //redirect to login page
-        if(!loggedIn) {
+        if(!wentThroughLogin) {
             //Intent intent = new Intent(this, AddSubActivity.class);
             Intent intent = new Intent(this,LoginActivity.class);
             Log.e("Intent",intent.toString());
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outstate){
         outstate.putString("token",token);
-        outstate.putBoolean("loggedIn",loggedIn);
+        outstate.putBoolean("loggedIn", wentThroughLogin);
         super.onSaveInstanceState(outstate);
     }
     public void getDateRecycler(String url){
