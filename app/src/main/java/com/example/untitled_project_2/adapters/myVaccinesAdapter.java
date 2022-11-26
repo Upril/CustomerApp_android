@@ -74,7 +74,6 @@ public class myVaccinesAdapter extends RecyclerView.Adapter<myVaccinesAdapter.my
         }
 
         holder.isBinding = false;
-
     }
 
     @Override

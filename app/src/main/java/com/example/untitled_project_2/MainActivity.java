@@ -32,6 +32,7 @@ import com.example.untitled_project_2.networking.JWTUtils;
 import com.example.untitled_project_2.networking.SSLRules;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -287,35 +288,15 @@ public class MainActivity extends AppCompatActivity {
     }
     private void updateRecycler(String url){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        @SuppressLint("NotifyDataSetChanged") JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+        @SuppressLint("NotifyDataSetChanged") JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url,
+                null,
                 response -> {
                     if (response != null && response.length() > 0){
                         vaccines.clear();
                         for (int i = 0; i<response.length();i++){
                             try{
-                                Vaccine appointmentObject = new Vaccine();
-                                JSONObject appointmentJson = response.getJSONObject(i);
-                                appointmentObject.setId(appointmentJson.getString("Id"));
-
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                Date d = sdf.parse(appointmentJson.getString("Date"));
-                                assert d != null;
-                                appointmentObject.setDate(output.format(d));
-
-                                JSONObject facility = appointmentJson.getJSONObject("MedicalFacility");
-                                appointmentObject.setFacilityName(facility.getString("Name"));
-
-                                JSONObject address = facility.getJSONObject("Address");
-                                JSONObject addressCity = address.getJSONObject("City");
-                                appointmentObject.setAddress(address.getString("StreetName")+
-                                        " "+address.getString("BuildingNumber")+", "+addressCity.getString("Name"));
-
-                                JSONObject vaccine = appointmentJson.getJSONObject("Vaccine");
-                                appointmentObject.setVaccineName(vaccine.getString("Name"));
-
-                                vaccines.add(appointmentObject);
-
+                                Vaccine vaccine = loadVaccineFromJsonObject(response, i);
+                                vaccines.add(vaccine);
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }
@@ -325,5 +306,36 @@ public class MainActivity extends AppCompatActivity {
                     vaccinesAdapter.notifyDataSetChanged();
                 }, error -> Log.e("VolleyError",error.toString()));
         requestQueue.add(arrayRequest);
+    }
+    private Vaccine loadVaccineFromJsonObject(JSONArray response, int i) throws JSONException, ParseException {
+        Vaccine appointmentObject = new Vaccine();
+        JSONObject appointmentJson = response.getJSONObject(i);
+        appointmentObject.setId(appointmentJson.getString("Id"));
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf =
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat output =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d = sdf.parse(appointmentJson.getString("Date"));
+        assert d != null;
+        appointmentObject.setDate(output.format(d));
+
+        JSONObject facility = appointmentJson.getJSONObject("MedicalFacility");
+        appointmentObject.setFacilityName(facility.getString("Name"));
+
+        JSONObject address = facility.getJSONObject("Address");
+        JSONObject addressCity = address.getJSONObject("City");
+        appointmentObject.setAddress(address.getString("StreetName")+
+                " "+address.getString("BuildingNumber")+", "
+                +addressCity.getString("Name"));
+
+        JSONObject vaccine = appointmentJson.getJSONObject("Vaccine");
+        appointmentObject.setVaccineName(vaccine.getString("Name"));
+
+        return appointmentObject;
+    }
+    @Override
+    public void onBackPressed(){
+        this.finishAffinity();
     }
 }

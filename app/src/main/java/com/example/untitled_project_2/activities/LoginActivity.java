@@ -120,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         mActivityLauncher.launch(intent);
+        finish();
     }
     private void login(){
         try {
@@ -162,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         setResult(RESULT_FIRST_USER, intent);
         mActivityLauncher.launch(intent);
+        finish();
     }
 }
 
