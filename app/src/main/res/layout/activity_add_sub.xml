@@ -7,9 +7,11 @@
     tools:context=".activities.AddSubActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="396dp"
-        android:layout_height="140dp"
+        android:layout_width="367dp"
+        android:layout_height="139dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="144dp"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/sub_row_style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
@@ -48,15 +50,15 @@
 
             <Spinner
                 android:id="@+id/vaccineSpinner"
-                android:spinnerMode="dialog"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:typeface="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="40sp"
                 android:gravity="center_vertical|left"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                android:spinnerMode="dialog"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:typeface="normal"
+                app:layout_constraintEnd_toEndOf="parent" />
         </RelativeLayout>
 
         <View

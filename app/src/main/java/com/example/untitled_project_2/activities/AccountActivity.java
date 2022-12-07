@@ -49,6 +49,7 @@ public class AccountActivity extends AppCompatActivity {
     public ArrayList<String> citiesArray;
     private ArrayList<String> valuesArray;
     private String token;
+    private Integer userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class AccountActivity extends AppCompatActivity {
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
 
-        int userId = -1;
+        userId = -1;
         //jakis token failed czy coś
         try {
             String[] data = JWTUtils.decode(token);
@@ -180,7 +181,7 @@ public class AccountActivity extends AppCompatActivity {
 
         //filling json array with gathered data from RegisterAdapter
         try {
-            jsonBody.put("Id", 1002);
+            jsonBody.put("Id", userId);
             jsonBody.put("FirstName", valuesArray.get(0));
             jsonBody.put("Surname", valuesArray.get(1));
             jsonBody.put("PhoneNumber", valuesArray.get(2));
@@ -197,7 +198,8 @@ public class AccountActivity extends AppCompatActivity {
         }
 
         final String mRequestBody = jsonBody.toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, "https://10.0.2.2:7277/api/account/edit/", response -> Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show(), error -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, "https://10.0.2.2:7277/api/account/edit/",
+                response -> Toast.makeText(AccountActivity.this, "Konto zostało zaktualizowane", Toast.LENGTH_LONG).show(), error -> {
             NetworkResponse response = error.networkResponse;
             String json;
             if (response != null && response.data != null) {
